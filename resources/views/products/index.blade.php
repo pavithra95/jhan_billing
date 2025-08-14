@@ -1,0 +1,215 @@
+@extends('layout.master')
+
+
+
+
+@section('content')
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+    <div class="col-md-12">
+
+        <h4 class="m-0 text-dark col-md-6 float-left">{{$title}}</h4>
+
+        <a class="btn btn-primary float-right btn-sm" href="/{{$url}}/create">NEW</a>
+    </div>
+</div>
+<br>
+ <div class="row">
+       <form action="" method="GET"  role="form">
+
+        
+          
+          <div class="row">
+
+
+            
+            
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="" for="">Product Name</label>
+                
+                <input type="text" name="product" class=" form-control"  value="{{ $product }}" autocomplete="off" placeholder="Product Name">
+              </div>
+            </div>
+            
+           
+             <div class="col-md-4">
+              <div class="form-group">
+                <label class="" for="">Category</label>
+                 <select name="category_id" id="input" class="form-control select2">
+                        <option value="">All</option>
+                        @foreach ($category as $c)
+                           <option @if ($category_id == $c->id) selected=""
+                              
+                           @endif  value="{{$c->id}}">{{$c->name}}</option>
+                        @endforeach
+                    </select>
+            </div>
+
+
+  </div> 
+  <div class="col-md-4">
+              <!-- <div class="form-group">
+                <label class="" for="">Unit</label>
+                
+                    <select name="unit_id" id="input" class="form-control select2">
+                        <option value="">All</option>
+                        @foreach ($units as $unit)
+                           <option @if ($unit_id == $unit->id) selected=""
+                              
+                           @endif value="{{$unit->id}}">{{$unit->name}}</option>
+                        @endforeach
+                    </select>
+            </div> -->
+
+
+  </div>
+  
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px">Filter</button>
+            @if(!empty($_GET))
+
+
+      <a style="margin-left: 10px;" href="/{{ request()->path() }}" class="btn btn-primary float-right">
+          Clear Filter
+      </a>
+      @endif
+</div>
+
+</form>
+</div>
+
+<br>
+
+        <table id="example" class="table table-hover table-light" style="width:100%">
+               <thead class="thead-dark">
+                        <tr>
+                            <th>S.No</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <!-- <th>Unit</th> -->
+                            <th>Hsn Code</th>
+                            <!-- <th>Gst Tax</th> -->
+                            <!-- <th>Igst Tax</th> -->
+                            <!-- <th>Cess Tax</th> -->
+                            <th>Stock Quantity</th>
+                            <!-- <th>Total Purchase Value</th> -->
+                            <!-- <th>Stock Amount</th> -->
+                            <th>Status</th>
+                            <th>Action</th>
+                          
+                            {{-- <th>Stock Quantity</th> --}}
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($items as $key => $item)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td><a href="/{{$url}}/{{ $item->id }}" >{{ $item->name }}</a></td>
+                            <td>{{ $item->Category->name ??'' }}</td>
+                            <!-- <td>{{ $item->Unit->name ?? '' }}</td> -->
+                            <td>{{ $item->hsn_code }}</td>
+                            <!-- <td>{{ $item->ProductTax->group_type_name ?? '' }}</td>
+                            <td>{{ $item->IgstProductTax->group_type_name ?? '' }}</td>
+                            <td>{{ $item->CessProductTax->group_type_name ?? '' }}</td> -->
+                            <td>{{ $item->quantity }}</td>
+                            <!-- <td>{{ $item->purchaseAmount() }}</td> -->
+                            <!-- @if($item->quantity>0)
+                           
+                            <td>{{  number_format($item->purchaseAmount()/ $item->quantity,2)  }}</td>
+                            @else
+                            <td>0</td>
+                            @endif -->
+                            
+                            <td> <input data-id="{{$item->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $item->status ? 'checked' : '' }}></td>
+                             
+                            <td>
+                              <a href="/products/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
+                                @if(auth()->user()->privilege == "admin")
+                              <a href="/products/{{$item->id}}/delete"><i class="fa fa-trash" ></i></a>
+                            @endif
+
+                            <a href="{{ url('/products/' . $item->id . '/labels') }}" 
+   class="btn btn-sm btn-info" target="_blank">
+    <i class="fas fa-barcode"></i> Print Label
+</a>
+
+                              
+                            </td>
+                           
+                            {{-- <td>{{$item->stockQuantity()}}</td>
+                            --}}
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                 {{$items->links()}}
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@stop
+
+
+@section('js')
+
+   
+<script >
+
+
+
+   
+    $(document).ready(
+        function() { 
+
+
+            $('.date-picker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
+
+                //Initialize Select2 Elements
+                $('.select2').select2({
+                  theme: 'bootstrap4'
+              })
+
+            });
+</script>
+
+<script>
+  $(function() {
+    $('.toggle-class').change(function() {
+        var status = $(this).prop('checked') == true ? 1 : 0; 
+        var user_id = $(this).data('id'); 
+         
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '/changeProductStatus',
+            data: {'status': status, 'user_id': user_id},
+            success: function(data){
+              console.log(data.success)
+            }
+        });
+    })
+  })
+</script>
+
+@stop
+
+
+
+
+
+
+
+

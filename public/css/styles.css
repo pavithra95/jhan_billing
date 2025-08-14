@@ -1,0 +1,13 @@
+body,p,h1,h2,h3,h4,h5,h6{padding:0px;margin:0px;font-family: 'Roboto', sans-serif !important;}
+.company_details{padding:0px 0px 0px 15px;}
+.company_details h3{margin:5px 0px 0px 0px;font-weight:bold;}
+.company_details p{font-weight:500;}
+.distributor_h4 h4{font-weight:bold;}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{padding: 5px;}
+.height10{height:10px;}
+.height30{height:30px;}
+.height50{height:50px;}
+.pagebreak { page-break-before: always; }
+@media print {
+	body {font-size:12px !important;}
+}
