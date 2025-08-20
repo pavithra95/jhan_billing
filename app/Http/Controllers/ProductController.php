@@ -255,6 +255,19 @@ public function getItemById(Request $request)
     }
     return response()->json(null);
 }
+public function getPurchaseItemById(Request $request)
+{
+    $item = Product::find($request->id);
+    if ($item) {
+        return response()->json([
+            'id' => $item->id,
+            'name' => $item->name,
+            'barcode' => $item->barcode,
+            'price' => $item->purchase_price,
+        ]);
+    }
+    return response()->json(null);
+}
 
     
 }

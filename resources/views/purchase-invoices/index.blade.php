@@ -65,20 +65,9 @@
              </select>
               </div>
             </div>
+            <div class="col-md-3"></div>
             
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="" for="">Pay Status</label>
-                
-             <select name="pay_status" id="inputsupplier" class="form-control select2" >
-                 <option value="">All</option>
-                 <option @if ($pay_status == "paid") selected=""  @endif value="paid">Paid</option>
-                <option   @if ($pay_status == "partial") selected=""  @endif value="partial">Partial</option>
-                <option @if ($pay_status == "pending") selected=""  @endif value="pending">Pending</option>
-             </select>
-              </div>
-            </div>
-
+           
             <button type="submit" class="btn btn-primary" style="margin-left: 10px">Filter</button>
             @if(!empty($_GET))
 
@@ -94,45 +83,6 @@
 <br>
 
 
-<div class="col-md-12">
-    <div class="row">
-  
-
-
-        <div class="col-md-4">
-            <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                <label>Total Bill Amount</label>
-                <div>
-
-                 <span class="hidden-xs">{{ $total_bill_amount }}</span>
-
-             </div>
-         </div>
-     </div>
-     <div class="col-md-4">
-            <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                <label>Total Paid Amount</label>
-                <div>
-
-                 <span class="hidden-xs">{{ $total_paid_amount }}</span>
-
-             </div>
-         </div>
-     </div>
-     <div class="col-md-4">
-            <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                <label>Total Due Amount</label>
-                <div>
-
-                 <span class="hidden-xs">{{ $total_due_amount }}</span>
-
-             </div>
-         </div>
-     </div>
-
-    </div>
-</div>
-<br>
 
 
 
@@ -146,9 +96,6 @@
                             <th>Supplier Name</th>
                             <th>Phone</th>
                             <th>Bill Amount</th>
-                            <th>Paid Amount</th>
-                            <th>Due Amount</th>
-                            <th>Pay Status</th>
                             <th>Action</th>
                             
                         </tr>
@@ -165,20 +112,7 @@
                             <td>{{ $item->vendor->name}}</td>
                             <td>{{ $item->vendor->phone}}</td>
                             <td>{{ number_format($item->total_amount, 2) }}</td>
-                            <td>{{ $item->paid_amount }}</td>
-                            <td>{{ number_format(($item->total_amount - $item->paid_amount), 2) }}</td>
-                           @if ($item->pay_status == "paid")
-                               <td><span class="badge badge-pill badge-success">{{ucwords($item->pay_status)}}</span></td>
-                            @else
-                               @if ($item->pay_status == "partial")
-                                <td><span class="badge badge-pill badge-warning">{{ucwords($item->pay_status)}}</span></td>
-                              
-
-                                @else
-                                 <td><span class="badge badge-pill badge-danger">{{ucwords($item->pay_status)}}</span></td>
                             
-                                @endif
-                            @endif
                              <td>
                               <a href="/create-payment-from-purchase-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a>
                               <a href="/purchase-invoices/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>

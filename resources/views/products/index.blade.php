@@ -90,18 +90,15 @@
                             <th>S.No</th>
                             <th>Product</th>
                             <th>Category</th>
-                            <!-- <th>Unit</th> -->
+                          
                             <th>Hsn Code</th>
-                            <!-- <th>Gst Tax</th> -->
-                            <!-- <th>Igst Tax</th> -->
-                            <!-- <th>Cess Tax</th> -->
+                           
                             <th>Stock Quantity</th>
-                            <!-- <th>Total Purchase Value</th> -->
-                            <!-- <th>Stock Amount</th> -->
+                          
                             <th>Status</th>
                             <th>Action</th>
                           
-                            {{-- <th>Stock Quantity</th> --}}
+                        
                            
                         </tr>
                     </thead>
@@ -109,21 +106,13 @@
                         @foreach ($items as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td><a href="/{{$url}}/{{ $item->id }}" >{{ $item->name }}</a></td>
+                            <td><a href="/{{$url}}/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
                             <td>{{ $item->Category->name ??'' }}</td>
-                            <!-- <td>{{ $item->Unit->name ?? '' }}</td> -->
+                         
                             <td>{{ $item->hsn_code }}</td>
-                            <!-- <td>{{ $item->ProductTax->group_type_name ?? '' }}</td>
-                            <td>{{ $item->IgstProductTax->group_type_name ?? '' }}</td>
-                            <td>{{ $item->CessProductTax->group_type_name ?? '' }}</td> -->
+                          
                             <td>{{ $item->quantity }}</td>
-                            <!-- <td>{{ $item->purchaseAmount() }}</td> -->
-                            <!-- @if($item->quantity>0)
                            
-                            <td>{{  number_format($item->purchaseAmount()/ $item->quantity,2)  }}</td>
-                            @else
-                            <td>0</td>
-                            @endif -->
                             
                             <td> <input data-id="{{$item->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $item->status ? 'checked' : '' }}></td>
                              

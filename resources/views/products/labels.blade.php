@@ -24,7 +24,7 @@
 </div>
 
 <div class="sheet">
-  @for ($i = 0; $i < 3; $i++) {{-- 24 labels per sheet example --}}
+  @for ($i = 0; $i < 2; $i++) {{-- 24 labels per sheet example --}}
     <div class="label">
       <div class="name">Jhan's Collections</div>
       <div class="barcode">

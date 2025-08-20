@@ -6,9 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalesReturnInvoiceItem extends Model
 {
+     protected $fillable = [
+        'invoice_id',
+        'item_id',  // Add this line
+        'barcode',
+        'quantity',
+        'rate',
+        'amount'
+    ];
     public function quantity()
     {
-         return $this->belongsTo(Item::class,'item_id','id')
+         return $this->belongsTo(Product::class,'item_id','id')
          ->sum('quantity');
      }
       public function ProductTax()

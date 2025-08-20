@@ -36,10 +36,14 @@ use App\Http\Controllers\SettingController;
 use App\Models\PurchaseReturnInvoice;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\PurchaseInvoice;
+use App\Models\SalesInvoice;
+use App\Models\Vendor;
+use App\Models\Vendors;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -188,6 +192,36 @@ Route::get('/get-customer-by-phone', function (Request $request) {
 
     return response()->json($customer);
 });
+Route::get('/get-customer-by-phone-return', function (Request $request) {
+    $phone = $request->query('phone');
+    $customer = Customer::where('phone', $phone)->first();
+    $sales = SalesInvoice::where('customer_id', $customer->id)->latest()->first();
+
+    return response()->json([
+        'name' => $customer->name,
+        'phone' => $customer->phone,
+        'sales_invoice_no' => $sales?->invoice_no ?? null
+    ]);
+});
+Route::get('/get-vendor-by-phone-return', function (Request $request) {
+    $phone = $request->query('phone');
+    $vendor = Vendors::where('phone', $phone)->first();
+    $purchases = PurchaseInvoice::where('supplier_id', $vendor->id)->latest()->first();
+
+    return response()->json([
+        'name' => $vendor->name,
+        'phone' => $vendor->phone,
+        'purchase_invoice_no' => $purchases?->invoice_no ?? null
+    ]);
+});
+
+      
+Route::get('/get-vendor-by-phone', function (Request $request) {
+    $phone = $request->query('phone');
+    $vendor = Vendor::where('phone', $phone)->first();
+
+    return response()->json($vendor);
+});
 
 Route::get('/get-item-by-barcode', function (Request $request) {
     $barcode = $request->query('barcode');
@@ -200,6 +234,22 @@ Route::get('/get-item-by-barcode', function (Request $request) {
             'id' => $item->id,
             'name' => $item->name,
             'price' => $item->sale_price
+        ]);
+    } else {
+        return response()->json(null);
+    }
+});
+Route::get('/get-purchase-item-by-barcode', function (Request $request) {
+    $barcode = $request->query('barcode');
+
+    $item = Product::where('barcode', $barcode)->first();
+
+    if ($item) {
+        return response()->json([
+            'barcode' => $item->barcode,
+            'id' => $item->id,
+            'name' => $item->name,
+            'price' => $item->purchase_price
         ]);
     } else {
         return response()->json(null);
@@ -218,6 +268,7 @@ Route::get('/get-product-types/{subcategory}', function ($subcategoryId) {
 });
 
 Route::get('/get-item-by-id', [ProductController::class, 'getItemById']);
+Route::get('/get-purchase-item-by-id', [ProductController::class, 'getPurchaseItemById']);
 
  Route::get('purchase-settings', [SettingController::class, 'purchaseNumberEdit']);
     Route::put('purchase-settings/{id}', [SettingController::class, 'purchaseNumberUpdate']);

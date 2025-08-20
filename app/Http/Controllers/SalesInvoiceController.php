@@ -102,18 +102,7 @@ class SalesInvoiceController extends Controller
      */
    public function store(Request $request)
 {
-    // dd($request->all());
-    // Validate input
-    // $request->validate([
-    //     'invoice_no' => 'required|unique:sales_invoices',
-    //     'invoice_date' => 'required|date',
-    //     'customer_phone' => 'required',
-    //     'customer_name' => 'required',
-    //     'customer_type' => 'required|in:Retail,Whole Sale,Reselling',
-    //     'payment_method' => 'required',
-    // ]);
-
-    // Handle customer
+    
     $customer = Customer::firstOrCreate(
         ['phone' => $request->customer_phone],
         [
@@ -512,47 +501,11 @@ class SalesInvoiceController extends Controller
     public function destroy($id)
     {
 
-        // get returns array of objects
-        // even if only one row array of 1 item will come
-        // first gives object
-        // no matter how many rows will only return 1st row
-        $old_items = SalesInvoiceItem::where('invoice_id', $id)->get(['item_id']);
+        $old_items = SalesInvoiceItem::where('sales_invoice_id', $id)->get(['item_id']);
 
-        SalesInvoiceItem::where('invoice_id', $id)->delete();
+        SalesInvoiceItem::where('sales_invoice_id', $id)->delete();
         salesInvoice::find($id)->delete();
-        $transaction = Transaction::where('row_id', $id)->where('table_name','sales_invoices')->first();
-
-        TransactionItem::where('transaction_id', $transaction->id)->delete();
-         $transaction->delete();
-         $has_items = PaymentItem::where('invoice_id', $id)->where('invoice_type','sales-payments')->count();
-         if ($has_items > 0) {
-             $payment_items = PaymentItem::where('invoice_id', $id)->where('invoice_type','sales-payments')->get();
-        foreach ($payment_items as $key => $item) {
-             $payment = Payment::where('id', $item->payment_id)->where('invoice_type','sales-payments')->first();
-
-             $toatl_items = PaymentItem::where('payment_id', $payment->id)->where('invoice_type','sales-payments')->count();
-
-             if($toatl_items == 1) {
-                $payment->delete();
-             } else {
-                $remaining_total = PaymentItem::where('payment_id', $payment->id)->where('invoice_type','sales-payments')->where('id','!=',$item->id)->sum('amount');
-                $payment->payment = $remaining_total;
-                $payment->save();
-             }
-         //dd($payment ); 
-
-        $transaction_payment = Transaction::where('row_id', $item->id)->where('table_name','sales_payments')->first();
-        //dd($transaction_payment);
-
-        TransactionItem::where('transaction_id', $transaction_payment->id)->delete();
-         $transaction_payment->delete();
-        
-          $item->delete();
        
-            # code...
-        }
-             # code...
-         }
 
           $items = Product::whereIn('id', $old_items)->get();
 
@@ -564,39 +517,7 @@ class SalesInvoiceController extends Controller
 
 
 
-       
-        //dd($payment_item );
-         
-        
-           
-
-       
-        return redirect('/sales-invoices');
+       return redirect('/sales-invoices');
     }
-   public function checkQuantity(Request $request)
-   {
-
-       $items = $request->items;
-
-       $errors = [];
-
-       foreach ($items as $key => $item) {
-        // $item = json_decode($item);
-           $check = Product::find($item['item_id']);
-           if($check->quantity < $item['quantity']) {
-            $errors[] = [
-                "name"=> $check->name,
-                "message"=> "Available Quantity is " . $check->quantity];
-           }
-
-       }
-
-       return response()->json($errors);
-
-   }
-
-   public function tax()
-   {
-       //
-   }
+   
 }

@@ -14,10 +14,9 @@ class SalesReturnInvoice extends Model
     {
         return $this->hasOne(PaymentMethod::class,  'id','payment_method_id');
     }
-    public function SaleItem()
+    public function salesReturnItem()
     {
-        return $this->hasMany(SalesReturnInvoiceItem::class, 'invoice_id','id')->where('line_type','item');
+        return $this->hasMany(SalesReturnInvoiceItem::class, 'invoice_id','id');
     }
-    
     
 }

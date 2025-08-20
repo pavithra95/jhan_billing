@@ -20,13 +20,13 @@
             <form action="{{ route('types.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
-                    <div class="form-group
+                    <div class="form-group">
                     <div class="form-group">
                         <label for="sub_category_id">Sub Category</label>
-                        <select class="form-control @error('sub_category_id') is-invalid @enderror" id="sub_category_id" name="sub_category_id">
+                        <select class="form-control @error('sub_category_id') is-invalid @enderror" id="sub_category_id" name="subcategory_id">
                             <option value="">Select Sub Category</option>
                             @foreach($sub as $item)
-                                <option value="{{ $item->id }}" {{ old('sub_category_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                <option value="{{ $item->id }}" {{ old('subcategory_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                             @endforeach
                         </select>
                         @error('sub_category_id')

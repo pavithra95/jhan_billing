@@ -88,13 +88,13 @@ class Product extends Model
      public function purchaseAmount()
     {
          return $this->hasMany(PurchaseInvoiceItem::class,'item_id','id')
-         ->sum('total_amount');
+         ->sum('amount');
     }
 	
 	 public function purchasereturnAmount()
     {
          return $this->hasMany(PurchaseReturnInvoiceItem::class,'item_id','id')
-         ->sum('total_amount');
+         ->sum('amount');
     }
 	
 	 public function netAmount()

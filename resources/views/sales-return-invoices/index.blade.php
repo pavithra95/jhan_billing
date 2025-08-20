@@ -58,44 +58,7 @@
                </form>
             </div>
             <br>
-            <!--<div class="col-md-12">
-               <div class="row">
-               
-               
-               
-                   <div class="col-md-4">
-                       <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                           <label>Total Bill Amount</label>
-                           <div>
-               
-                            <span class="hidden-xs">{{ $total_bill_amount }}</span>
-               
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                       <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                           <label>Total Paid Amount</label>
-                           <div>
-               
-                            <span class="hidden-xs">{{ $total_paid_amount }}</span>
-               
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                       <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                           <label>Total Due Amount</label>
-                           <div>
-               
-                            <span class="hidden-xs">{{ $total_due_amount }}</span>
-               
-                        </div>
-                    </div>
-                </div>
-               
-               </div>
-               </div>-->
+           
             <br>
             <table id="example" class="table table-hover table-light" style="width:100%">
                <thead class="thead-dark">
@@ -105,11 +68,9 @@
                      <th>Against Invoice No</th>
                      <th>Credit Note Date</th>
                      <th>Customer</th>
-                     <!--<th>Ph.NO</th>-->
+                   
                      <th>Bill Amount</th>
-                     <!--<th>Paid Amount</th>
-                        <th>Due Amount</th>
-                        <th>Pay Status</th>-->
+                    
                      <th>Action</th>
                   </tr>
                </thead>
@@ -118,29 +79,15 @@
                   <tr>
                      <td>{{ $key + 1 }}</td>
                      <td>
-                        <a href="/{{$url}}/{{ $item->id }}">
+                        <a href="/{{$url}}/{{ $item->id }}/edit">
                            {{$item->invoice_no}}
                      </td>
-                     <!--<td>{{ $item->due_date}}</td>--><td>{{ $item->reference_no}}</td>
+                   <td>{{ $item->against_invoice_no }}</td>
                      <td>{{ $item->invoice_date }}</td>
                      <td>{{ $item->customer->name}}</a></td>
                      <!--<td>{{ $item->customer->phone}}</a></td>-->
                      <td>{{ number_format($item->total_amount, 2) }}</td>
-                     <!--<td>{{ $item->paid_amount }}</td>
-                        <td>{{ number_format(($item->total_amount - $item->paid_amount), 2) }}</td>
-                        
-                        @if ($item->pay_status == "paid")
-                           <td><span class="badge badge-pill badge-success">{{ucwords($item->pay_status)}}</span></td>
-                        @else
-                           @if ($item->pay_status == "partial")
-                            <td><span class="badge badge-pill badge-warning">{{ucwords($item->pay_status)}}</span></td>
-                          
-                        
-                            @else
-                             <td><span class="badge badge-pill badge-danger">{{ucwords($item->pay_status)}}</span></td>
-                        
-                            @endif
-                        @endif-->
+                    
                      <td>
                         <!--<a href="/create-payment-from-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a>-->
                         <a href="/sales-return-invoices/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>

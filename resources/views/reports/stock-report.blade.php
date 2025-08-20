@@ -47,7 +47,7 @@
 							<th>AR.Pur.Qty</th>
                             <th>Sales Qty</th>
                             <th>Stock Qty</th>
-                           {{--  <th>Total Sale Amount</th> --}}
+                        
                             <th>Total Pur.Net Amt</th>
                             <th>Ava.Stock Net T.Amt</th>
                             <th>Total Purchase Value</th>
@@ -69,16 +69,10 @@
                             <td>{{$item->purchaseQuantity()}}</td>
                            <td>{{$item->returnstockQuantity()}}</td>
 						   <td>{{$item->salesQuantity() + $item->cashQuantity()}}</td>
-						   <!--<td>{{$item->totalSaleQuantity()}}</td>-->
+						 
                           
                             <td>{{ $item->quantity }}</td>
-                           <!--  
-                            @if($item->quantity > 0)
-                          
-                           <td>{{  number_format($item->purchaseAmount()/ $item->quantity,2)  }}</td>
-                           @else
-                                 <td>0</td>
-                                 @endif -->
+                         
 
                              @if($item->purchaseQuantity() > 0)
 

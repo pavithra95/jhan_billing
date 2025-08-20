@@ -8,16 +8,15 @@ class PurchaseInvoice extends Model
 {
     public function vendor()
     {
-        return $this->hasOne(Vendors::class, 'id', 'vendor_id');
+        return $this->hasOne(Vendors::class, 'id', 'supplier_id');
     }
      public function Payment()
     {
         return $this->hasOne(PaymentMethod::class,  'id','payment_method_id');
     }
-     public function SaleItem()
+     public function PurchaseItem()
     {
-        return $this->hasMany(PurchaseInvoiceItem::class, 'invoice_id','id')->where('line_type','item');
+        return $this->hasMany(PurchaseInvoiceItem::class, 'purchase_invoice_id','id');
     }
-    
     
 }
