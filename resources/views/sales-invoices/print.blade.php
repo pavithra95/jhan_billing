@@ -1,298 +1,126 @@
-
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Sale Invoice</title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<link href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/assets/css/styles.css" rel="stylesheet">
-		<link href="/assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-	</head>
+<head>
+	<meta charset="utf-8">
+	<title>Sales Invoice</title>
+	<link href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/styles.css" rel="stylesheet">
+	<link href="/assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<style>
-	body, p, h1, h2, h3, h4, h5, h6 {
-    font-family: 'Calibri', sans-serif !important;
-    font-size: 16px;
-    }
-    .table-bordered {
-    border: 2px solid #0c0c0c;
-    }
-    .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
-    border: 1px solid black;
-    }
-    .table-bordered>tbody>tr>td {
-    border: 1px solid #0c0c0c;
-    }
-    .table>tbody+tbody {
-    border-top: 1px solid #0e0e0e;
-    }
+		body, p, h1, h2, h3, h4, h5, h6 {
+			font-family: 'Calibri', sans-serif !important;
+			font-size: 15px;
+		}
+		.table-bordered {
+			border: 2px solid #0c0c0c;
+		}
+		.table-bordered>thead>tr>td, 
+		.table-bordered>thead>tr>th,
+		.table-bordered>tbody>tr>td {
+			border: 1px solid #0c0c0c;
+		}
 	</style>
-	<body  onload="window.print()" style="font-family: calibri;">
-				<div class="container">
-			
-						<div class="row">
-				<div class="col-xs-12">
-					<table class="table table-bordered">
-						<tr>
-							<td colspan="2">
-								<div class="col-xs-6 company_details">
-									<!--<img src="assets/images/printlogo.jpg" style="width:250px;padding-top:5px;padding-bottom:5px;text-align:right;">-->
-									<!--<h1><b>DISTRIBUTORS</b></h1>-->
-									<img src="/assets/images/srlogo.png" style="width:250px;padding-top:5px;padding-bottom:5px;text-align:right;">
-									<p><strong>GSTIN :</strong> 33IESPS8823D1ZX</p>
-									<p><strong>Address :</strong> SF.NO : 343/D,Green view Telecom Colony, <p>Opp to Visakhapatnam Steels, Peelamedu,</p>
-									<p>Coimbatore, Tamil Nadu 641041. </p>       
-									<p><strong>Mobile :</strong> +91 9943202090, 9787372757 </p>
-									<p><strong>Email Id :</strong> srdistributors@gmail.com </p>
-									
-								</div>
-								<div class="col-xs-2" style="width: 48.333333%;padding-left: 130px;">
-									<!--<img src="/assets/images/printlogo.jpg" style="width:170px;padding-top:5px;text-align:right;">-->
-									<!--<p><strong>GSTIN    &nbsp;&nbsp;&nbsp;&nbsp;:</strong> 33IESPS8823D1ZX</p>
-									<p><strong>Address  &nbsp;:</strong> SF.NO : 343/D,Green view Telecom Colony, Opp to Visakhapatnam Steels, Peelamedu,</p>
-									<p>Coimbatore, Tamil Nadu 641041. </p>       
-									<p><strong>Mobile   &nbsp;&nbsp;&nbsp;&nbsp;:</strong> +91 9943202090, 9787372757 </p>
-									<p><strong>Email Id&nbsp;&nbsp;&nbsp;:</strong> srdistributors@gmail.com </p>-->
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<div class="col-xs-7 customer_details">
-								<div class="text-gray-light" style="line-height: 1.8;"><b>BILLED TO:</b></div>
-									<h5 class="to"><strong>{{$sales->customer->name}}</strong></h5>
-									<div class="address"><b>GSTIN :</b> {{$sales->customer->gst_no}}</div>
-									<div class="address"><b>Address : </b> {{$sales->customer->address}}</div>
-									<!--<div class="address"><b>City: </b>{{$sales->customer->city}}</div>-->
-									<div class="address"><b>Mobile : </b> {{$sales->customer->phone}}</div>
-									<!--<div class="address"><b>GSTIN :</b>{{$sales->customer->gst_no}}</div>-->
-								</div>
-								<div class="col-xs-5" style="vertical-align:middle;text-align:right;margin-top: -10px;">
-								<div class="text-gray-light"><b></b></div><br>
-									<h3 class="title text-center" style="letter-spacing: 6px;font-size: xx-large;font-weight: 600;">INVOICE</h3><br>
-									<h4 class="invoice-id text-center" style="line-height: 1.8;margin-top: -20px;"><b>Number	&nbsp;&nbsp;:</b> {{$sales->invoice_no}}</h4>
-									<h4 class="date text-center" style="margin-bottom: 5px;"><b>Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$sales->invoice_date}}</h4>
-								</div>
-							</td>
-						</tr>
-					</table>
-					
-					<!--<h4 class="text-center" style="font-weight:bold;">POLO SHIRT - BOYS</h4>-->
-					<table class="table table-bordered" style="margin-bottom: 0px;" height="auto">
-						<thead>
-							<tr>
-								<th rowspan="3"style="vertical-align:middle;width:50px;text-align:center;text-transform:uppercase;">S.No</th>
-								<th rowspan="3" style="vertical-align:middle;width:150px;text-align:center;text-transform:uppercase;">Product Name</th>
-								<th rowspan="3" style="vertical-align:middle;width:120px;text-align:center;text-transform:uppercase;">HSN Code</th>
-								<th rowspan="3" style="vertical-align:middle;text-align:center;text-transform:uppercase;">Qty</th>
-								<th rowspan="3" style="vertical-align:middle;text-align:center;text-transform:uppercase;">Rate</th>
-								<th rowspan="3" style="vertical-align:middle;text-align:center;text-transform:uppercase;">GST %</th>
-								<th rowspan="3" style="vertical-align:middle;text-align:center;text-transform:uppercase;">CESS %</th>
-								<th rowspan="3" style="vertical-align:middle;width:150px;text-align:center;text-transform:uppercase;">Amount </th>
-							</tr>
-							
-						</thead>
-						<tbody>
-							@foreach ($sales_item as $key=>$item)
+</head>
+<body onload="window.print()">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
 
-							<tr>
-								
-							
-								<td style="vertical-align:middle;width:50px;text-align:center;text-transform:uppercase;">{{$key + 1}}</td>
-								<td style="vertical-align:middle;width:150px;text-align:center;text-transform:uppercase;">{{$item->item_name}}</td>
-								<td style="vertical-align:middle;width:120px;text-align:center;text-transform:uppercase;">{{$item->product->hsn_code}}</td>
-								<td style="vertical-align:middle;text-align:center;text-transform:uppercase;">{{$item->quantity}}</td>
-								<td style="vertical-align:middle;text-align:center;text-transform:uppercase;">{{$item->item_price}}</td>
-								<td style="vertical-align:middle;text-align:center;text-transform:uppercase;">{{ $item->ProductTax->group_type_name}}</td>
-								<td style="vertical-align:middle;text-align:center;text-transform:uppercase;">{{ $item->CessProductTax->group_type_name }}</td>
-								<td style="vertical-align:middle;width:150px;text-align:center;text-transform:uppercase;">{{ number_format($item->total_amount, 2) }} </td>
-							</tr>
+				{{-- Company + Customer Details --}}
+				<table class="table table-bordered">
+					<tr>
+						<td colspan="2">
+							<div class="col-xs-6">
+								<!-- <img src="/assets/images/srlogo.png" style="width:200px;"> -->
+								<p><strong>Jhan's Collections</strong></p>
+								<p><strong>GSTIN:</strong> 33IESPS8823D1ZX</p>
+								<p><strong>Address:</strong> 15, Thudiyalur Rd, Vasantham Nagar, Saravanampatti<br>
+								Coimbatore, Tamil Nadu 641035</p>       
+								<p><strong>Mobile:</strong> +91 73394 02937</p>
+								<p><strong>Email:</strong> srdistributors@gmail.com</p>
+							</div>
+							<div class="col-xs-6 text-right">
+								<h3 style="letter-spacing: 4px; font-weight: 600;">INVOICE</h3>
+								<p><strong>Invoice No:</strong> {{ $invoice->invoice_no }}</p>
+								<p><strong>Date:</strong> {{ $invoice->invoice_date }}</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="col-xs-7">
+								<h5><strong>BILLED TO:</strong></h5>
+								<p><b>Name:</b> {{ $invoice->customer->name ?? '-' }}</p>
+								<!-- <p><b>GSTIN:</b> {{ $invoice->customer->gst_no ?? '-' }}</p> -->
+								<!-- <p><b>Address:</b> {{ $invoice->customer->address ?? '-' }}</p> -->
+								<p><b>Phone:</b> {{ $invoice->customer->phone ?? '-' }}</p>
+							</div>
+						</td>
+					</tr>
+				</table>
 
-							@endforeach
-													
-						<tbody>
+				{{-- Invoice Items --}}
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>S.No</th>
+							<th>Product</th>
+							<th>HSN Code</th>
+							<th>Qty</th>
+							<th>Rate</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach ($invoice->SaleItem as $key => $item)
 							<tr>
-								<td class="no text-center" colspan="3"><strong>TOTAL</strong></td>
-								<td class="qty" style="vertical-align:middle;text-align:center;">{{$total_qty}}</td>
-								<td class="qty" colspan="1"></td>
-								<td class="qty" colspan="1"></td>
-								<td class="qty" colspan="1"></td>
-								<td class="qty" colspan="1" style="vertical-align:middle;text-align:center;"  >{{$total_amount}}</td>
+								<td>{{ $key+1 }}</td>
+								<td>{{ $item->product->name ?? 'Deleted Product' }}</td>
+								<td>{{ $item->product->hsn_code ?? '-' }}</td>
+								<td>{{ $item->quantity }}</td>
+								<td>{{ number_format($item->rate,2) }}</td>
+								<td>{{ number_format($item->quantity * $item->rate,2) }}</td>
 							</tr>
-						</tbody>
-					</table>
-					<table class="table table-bordered" style="margin-bottom: 0px;">
-						<thead>
-							<tr>
-								<th style="vertical-align:middle;text-align:left;width:60%;">
-								
-								
-									
-                           
-									<h5><b>Tax Split :</b> @foreach ($gst as $g)
-										<span>({{$g->item_name}} - {{$g->total_amount}})</span>@endforeach @foreach ($cess as $c) & ({{$c->item_name}} - {{$c->total_amount}}) @endforeach
-										
-									</h5>
-								
-                           
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-								</th>
-								<th style="vertical-align:middle;text-align:right;width:40%;">
-								<div class="col-xs-6">
-								<p style="vertical-align:middle;text-align:left;">Total Excl. GST&nbsp;&nbsp;: </p>
-								<p style="vertical-align:middle;text-align:left;">Add GST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </p>
-								<p style="vertical-align:middle;text-align:left;">Add CESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </p>
-								<p style="vertical-align:middle;text-align:left;">Round Off&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	: </p>
-								</div>
-								<div class="col-xs-6 ">
-								<p style="vertical-align:middle;text-align:rigth;font-weight: 300;">{{$sub_total}}</p>
-								<p style="vertical-align:middle;text-align:rigth;font-weight: 300;">{{$total_gst}}</p>
-								<p style="vertical-align:middle;text-align:rigth;font-weight: 300;">{{$total_cess}}</p>
-								<p style="vertical-align:middle;text-align:rigth;font-weight: 300;">{{ number_format($roundoff->total_amount,2) }}</p>
-								</div>
-									<!--<p colspan="2" style="vertical-align:middle;text-align:left;">Total value before GST : <strong colspan="9">6546546</strong></p>
-									<div class="clearfix"></div>
-									<div class="height10"></div>
-									<h5>Total GST: 1251</h5>
-									<h5>Total CESS: 1500</h5>
-									<h5>Round off: 1500</h5>-->
-									<div class="clearfix"></div>
-									<div class="height30"></div>
-									<div class="height10"></div>
-								</th>
-							</tr>
-							<tr>
-								
-								<th style="vertical-align:middle;text-align:left;width:60%;">
-									<h5><b>Total Amount In Words :</b> {{ucwords(getIndianCurrency($sales->total_amount))}}</h5>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-								</th>
-								<th style="vertical-align:middle;text-align:right;width:40%;">
-								<div class="col-xs-6">
-									<p style="vertical-align:middle;text-align:left;">GRAND TOTAL &nbsp;&nbsp;: <!--{{ number_format($sales->total_amount,2) }}--></p></div>
-									<div class="col-xs-6">
-									<p style="vertical-align:middle;text-align:right;font-size: 17px;"><!--GRAND TOTAL : -->{{ number_format($sales->total_amount,2) }}</p></div>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-								</th>
-							</tr>
-							<tr>
-								<th style="vertical-align:middle;text-align:left;width:50%;">
-								<p style="font-size:16px"><b>Bank Details </b></p>
-									<div class="height07"></div>
-									<p style="font-size:15px;font-weight:450;line-height: 1.6;">Bank Name : SOUTH INDIAN BANK</p>
-									<div class="height07"></div>
-									<p style="font-size:15px;font-weight:450;line-height: 1.6;">Account Number : 11235689741055</p>
-									<div class="height07"></div>
-									<p style="font-size:15px;font-weight:450;">IFSC Code : AMB258963</p>
-									<div class="clearfix"></div>
-									<div class="height30"></div>
-									<div class="height10"></div>
-									
-								</th>
-								<th style="vertical-align:middle;text-align:left;width:50%;">
-									<p style="font-size:16px"><b>Terms & Conditions </b></p>
-									<h6></h6>
-									<p style="font-size:15px;font-weight:450;line-height: 1.6;">1. Goods once sold cannot be taken back.</p>
-									<div class="height08"></div>
-									<p style="font-size:15px;font-weight:450;line-height: 1.6;">2. Interest @24% p.a will be charged if the payment is not made within the stipulated time.</p>
-									<div class="height08"></div>
-									<p style="font-size:15px;font-weight:450">3. Subject to 'Coimbatore' Jurisdiction.</p>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-								</th>
-								<!--<th style="vertical-align:middle;text-align:left;width:50%;">
-									<h4>DSE NAME : </h4>
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-								</th>
-								<th style="vertical-align:middle;text-align:left;width:50%;">
-									<h4>ASM NAME : </h4>
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-								</th>-->
-								
-							</tr>
-							<tr>
-								<!--<th style="vertical-align:middle;text-align:left;width:50%;">
-									<h4>BANK DETAILS : </h4><br>
-									<p style="font-size:16px"><b>BANK NAME : SOUTH INDIAN BANK</b></p>
-									<div class="height10"></div>
-									<p style="font-size:16px"><b>ACCOUNT NUMBER : 11235689741055</b></p>
-									<div class="height10"></div>
-									<p style="font-size:16px"><b>IFSC CODE : AMB258963</b></p>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-								</th>-->
-								<!--<th style="vertical-align:middle;text-align:left;width:50%;">
-									<p style="font-size:16px"><b>Bank Details </b></p>
-									<div class="height07"></div>
-									<p style="font-size:14px"><b>Bank Name : SOUTH INDIAN BANK</b></p>
-									<div class="height07"></div>
-									<p style="font-size:14px"><b>Account Number : 11235689741055</b></p>
-									<div class="height07"></div>
-									<p style="font-size:14px"><b>IFSC Code : AMB258963</b></p>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-								</th>-->
-								<th style="vertical-align:middle;text-align:center;width:50%;">
-									<h5>Receiver Signature  </h5><br><br><br>
-									<h6></h6>
-									<div class="height20"></div>
-									<div class="clearfix"></div>
-									<div class="height20"></div>
-									<div class="height10"></div>
-									
-								</th>
-								<!--<th style="vertical-align:middle;text-align:left;width:50%;">
-									<h4>DSE NAME : </h4>
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-								</th>
-								<th style="vertical-align:middle;text-align:left;width:50%;">
-									<h4>ASM NAME : </h4>
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-								</th>-->
-								<th style="vertical-align:middle;text-align:center;width:50%;">
-									<h5>For SR DISTRIBUTORS  </h5>
-									<div class="clearfix"></div>
-									<div class="height50"></div>
-									<div class="height30"></div>
-									<h6>Authorised Signatory </h6>
-									
-								</th>
-							</tr>
-						</thead>
-					</table>
-					<!--<table class="table table-bordered">
-						<tbody>
-							<tr>
-								<td style="vertical-align:middle;text-align:center;"><strong>ORDER CREATED BY :</strong> SUPER ADMIN</td>
-							</tr>
-						</tbody>
-					</table>
-					<h6 style="text-align:center;">This is an automatic system generated invoice, does not require signature of the company personnel.</h6>-->		
-				</div>
+						@endforeach
+						<tr>
+							<td colspan="3"><strong>TOTAL</strong></td>
+							<td>{{ $invoice->SaleItem->sum('quantity') }}</td>
+							<td></td>
+							<td>{{ number_format($invoice->sub_total,2) }}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				{{-- Totals --}}
+				<table class="table table-bordered">
+					<tr>
+						<td style="width:60%;">
+							<h5><b>Total Amount in Words:</b> {{ ucwords(getIndianCurrency($invoice->total_amount)) }}</h5>
+						</td>
+						<td style="width:40%; text-align:right;">
+							<p><b>Sub Total:</b> {{ number_format($invoice->sub_total,2) }}</p>
+							<p><b>GST:</b> {{ number_format($invoice->gst_amount,2) }}</p>
+							<p><b>Total:</b> {{ number_format($invoice->total_amount,2) }}</p>
+						</td>
+					</tr>
+				</table>
+
+				{{-- Footer --}}
+				<table class="table table-bordered">
+					<tr>
+						<td style="text-align:center;">
+							<p><b>Receiver Signature</b></p><br><br>
+						</td>
+						<td style="text-align:center;">
+							<p><b>For SR DISTRIBUTORS</b></p>
+							<br><br>
+							<p>Authorised Signatory</p>
+						</td>
+					</tr>
+				</table>
+
 			</div>
-			<div class="pagebreak"></div>
-					</div>
-				<script src="/assets/bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="/assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	</body>
+		</div>
+	</div>
+</body>
 </html>

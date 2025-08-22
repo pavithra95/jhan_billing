@@ -93,6 +93,9 @@
                   <li class="nav-item">
                      <a href="/brands" class="nav-link">Brand</a>
                   </li>
+                  <li class="nav-item">
+                     <a href="/size" class="nav-link">Size</a>
+                  </li>
                </ul>
             </div>
          </li>
@@ -193,7 +196,7 @@
                </ul>
             </div>
          </li>
-     <li class="nav-item">
+     <!-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#units" role="button" aria-expanded="" aria-controls="units">
             <i class="link-icon" data-feather="filter"></i>
             <span class="link-title">Units</span>
@@ -209,7 +212,7 @@
                   </li>
                </ul>
             </div>
-         </li>
+         </li> -->
          @if(auth()->user()->privilege == "admin")
      <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#reports" role="button" aria-expanded="" aria-controls="reports">
@@ -234,9 +237,9 @@
                   <li class="nav-item">
                      <a href="/sales-return-invoice-report" class="nav-link">Sales Return Report</a>
                   </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
                      <a href="/cashbill-report" class="nav-link">CashBill Report</a>
-                  </li>
+                  </li> -->
           <li class="nav-item">
                      <a href="/product-report" class="nav-link">Product Report</a>
                   </li>
@@ -305,15 +308,15 @@
                    <li class="nav-item">
                      <a href="/sales-settings" class="nav-link">Sales Settings</a>
                   </li>
-                   <li class="nav-item">
+                   <!-- <li class="nav-item">
                      <a href="/cashbill-settings" class="nav-link">Cash Bill Settings</a>
-                  </li>
-                  <li class="nav-item">
+                  </li> -->
+                  <!-- <li class="nav-item">
                      <a href="/stores" class="nav-link">Stores</a>
                   </li>
                   <li class="nav-item">
                      <a href="/variations" class="nav-link">Variations</a>
-                  </li>
+                  </li> -->
                 
                </ul>
             </div>

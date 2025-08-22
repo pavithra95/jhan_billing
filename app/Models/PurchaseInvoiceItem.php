@@ -29,7 +29,7 @@ class PurchaseInvoiceItem extends Model
      } 
      public function sales()
      {
-         return $this->hasOne(PurchaseInvoice::class, 'id' , 'invoice_id');
+         return $this->hasOne(PurchaseInvoice::class, 'id' , 'sales_invoice_id');
      }  
      public function gstTax()
      {

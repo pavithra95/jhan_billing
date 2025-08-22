@@ -30,7 +30,7 @@
       
       <li class="nav-item dropdown nav-profile">
         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img src="{{ url('assets/images/favicon.png') }}" alt="profile">
+          <!-- <img src="{{ url('assets/images/favicon.png') }}" alt="profile"> -->
         </a>
         <div class="dropdown-menu" aria-labelledby="profileDropdown">
           <div class="dropdown-header d-flex flex-column align-items-center">

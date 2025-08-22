@@ -96,9 +96,9 @@
                      <th>Customer</th>
                      <th>Ph.NO</th>
                      <th>Bill Amount</th>
-                     <th>Paid Amount</th>
-                     <th>Due Amount</th>
-                     <th>Pay Status</th>
+                     <!-- <th>Paid Amount</th> -->
+                     <!-- <th>Due Amount</th> -->
+                     <!-- <th>Pay Status</th> -->
                      <th>Action</th>
                   </tr>
                </thead>
@@ -114,19 +114,11 @@
                      <td>{{ $item->customer['name']}}</a></td>
                      <td>{{ $item->customer['phone']}}</a></td>
                      <td>{{ number_format($item->total_amount, 2) }}</td>
-                     <td>{{ $item->paid_amount }}</td>
-                     <td>{{ number_format(($item->total_amount - $item->paid_amount), 2) }}</td>
-                     @if ($item->pay_status == "paid")
-                     <td><span class="badge badge-pill badge-success">{{ucwords($item->pay_status)}}</span></td>
-                     @else
-                     @if ($item->pay_status == "partial")
-                     <td><span class="badge badge-pill badge-warning">{{ucwords($item->pay_status)}}</span></td>
-                     @else
-                     <td><span class="badge badge-pill badge-danger">{{ucwords($item->pay_status)}}</span></td>
-                     @endif
-                     @endif
+                     <!-- <td>{{ $item->paid_amount }}</td> -->
+                     <!-- <td>{{ number_format(($item->total_amount - $item->paid_amount), 2) }}</td> -->
+                   
                      <td>
-                        <a href="/create-payment-from-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a>
+                        <!-- <a href="/create-payment-from-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a> -->
                         <a href="/sales-invoices/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
                         <a href="/sales-invoice/print/{{ $item->id }}"><i class= "fa fa-print"></i></a>
                         @if(auth()->user()->privilege == "admin")

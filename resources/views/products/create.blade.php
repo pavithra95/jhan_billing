@@ -33,6 +33,14 @@
                                     <div class="error text-danger">{{ $errors->first('item_name') }}</div>
                                 @endif
 
+                            </div> 
+                            <div class="form-group @if($errors->has('age')) text-danger @endif">
+                                <label for=""> Age</label>
+                                <input type="text" name="age" class="form-control" value="" required="required">
+                                @if($errors->has('age'))
+                                    <div class="error text-danger">{{ $errors->first('age') }}</div>
+                                @endif
+
                             </div>
 
  <div class="form-group @if($errors->has('category_id')) text-danger @endif">
@@ -128,19 +136,15 @@
  <div class="form-group @if($errors->has('brand')) text-danger @endif">
     <div class="form-group">
                             <label for="">Size</label>
-                            <select name="brand_id" class="form-control">
+                            <select name="size" class="form-control">
                                     <option value="">-- Select Size --</option>
-                                    <option value="">Xs</option>
-                                    <option value="">S</option>
-                                    <option value="">M</option>
-                                    <option value="">L</option>
-                                    <option value="">XL</option>
-                                    <option value="">XXL</option>
-                                    <option value="">XXXL</option>
+                                    @foreach($sizes as $size)
+                                        <option value="{{ $size->id }}">{{ $size->name }}</option>
+                                    @endforeach
                                 </select>
                         </div>
                                 <label for=""> Brand</label>
-                                <select name="brand" class="form-control">
+                                <select name="brand_id" class="form-control">
                                     <option value="">-- Select Brand --</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>

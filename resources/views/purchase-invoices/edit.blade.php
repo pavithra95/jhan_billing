@@ -1,1174 +1,232 @@
 @extends('layout.master')
 
-@section('title', 'ZetBooks')
-
-@section('content_header')
-
-@stop
-
 @section('content')
-<div class="row" id="invoice-app">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-
-                    <div class="col-md-12">
-
-                        <h4 class="m-0 text-dark col-md-6 float-left">{{$title}}</h4>
-
-                    </div>
-                </div>
-                <br>
-
-
-                 <form ref="form" action="/{{$url}}/{{$sales->id}}" method="POST" role="form" class="col-md-12 " autocomplete="off">
-                    {{ csrf_field() }}
-                    {{method_field('PUT')}}
-
-
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-                                <label>Supplier Name</label>
-
-                                <!--<select v-model="selectedCustomer" name="vendor_id" id="inputCustomer_id"@input="refreshCustomer" class="form-control" required="required">-->
-                                <!--    <option :value="customer.id"  v-for="customer in customers">@{{customer.name}}</option>-->
-                                <!--</select>-->
-                                 <v-select  :options="customers" label="name" v-model="selectedCustomer" @input="refreshCustomer">
-                                                    
-                                                        </v-select>
-                                                         <template v-if="selectedCustomer != null">
-                                                              <input type="hidden" name="vendor_id" :value="selectedCustomer.id">
-                                                              </template>
-                               {{--  <select name="customer_id"  class="form-control select2" id="customer_id" required="">
-                                     <option value=""></option>
-                                   @foreach($customers as $customer)
-                                  
-                                   <option value="{{$customer->id}}">{{$customer->name}}</option>
-
-                                   @endforeach 
-                               </select> --}}
-                               @if($errors->has('customer_name'))
-                               <div class="error text-danger">{{ $errors->first('customer_name') }}</div>
-                               @endif
-                           </div>
-                       </div>
-                       <div class="col-md-4">
-
-                        <div class="form-group @if($errors->has('invoice_no')) text-danger @endif">
-                            <label for="">Purchase Invoice No</label>
-                            <input type="text" name="invoice_no" class="form-control" id="invoice_no" required="required" value="{{$sales->invoice_no}}" disabled="">
-                            @if($errors->has('invoice_no'))
-                            <div class="error text-danger">{{ $errors->first('invoice_no') }}</div>
-                            @endif
-
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="form-group @if($errors->has('invoice_date')) text-danger @endif">
-                            <label for="">Purchase Invoice Date</label>
-                            <input type="text" name="invoice_date" class="form-control date-picker " required="" value="{{$sales->invoice_date}}" >
-                            @if($errors->has('invoice_date'))
-                            <div class="error text-danger">{{ $errors->first('invoice_date') }}</div>
-                            @endif
-
-                        </div>
-                    </div>
-                </div>
-                <div class=row>
-                    <div class="col-md-4">
-
-                        <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-                            <label for=""> Purchase Invoice Due Date</label>
-                            <input type="text" name="due_date" class="form-control date-picker" id=""  value="{{$sales->due_date}}" >
-                            @if($errors->has('due_date'))
-                            <div class="error text-danger">{{ $errors->first('due_date') }}</div>
-                            @endif
-
-                        </div>
-                    </div> 
-                    <div class="col-md-4">
-
-                        <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-                            <label for="">Purchase Invoice No</label>
-                            <input type="text" name="reference_no" class="form-control"  value="{{$sales->reference_no}}" >
-                            @if($errors->has('due_date'))
-                            <div class="error text-danger">{{ $errors->first('due_date') }}</div>
-                            @endif
-
-                        </div>
-                    </div> 
-                    <div class="col-md-4">
-
-                        <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-                            <label for="">Payment Method</label>
-                            <select name="payment_method_id" id="inputPayment_method_id" class="form-control" required="required">
-                                @foreach ($payment as $item)
-                                {{-- expr --}}
-                                <option @if ($sales->payment_method_id == $item->id ) selected="" 
-
-                                    @endif value="{{$item->id}}">{{$item->name}}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                        </div> 
-                        <div class="col-md-4">
-
-                            <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-                                <label for="">Invoice Notes</label>
-                                <textarea name="notes" id="" class="form-control">{{$sales->notes}}</textarea>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-
-
-
-
-                                    <ul v-if="errors.length > 0">
-                                        <div class="alert alert-danger" role="alert">
-
-                                            <li v-for="(error, index) in errors">@{{error.name}}: @{{error.message}}</li>
-                                        </div>
-
-                                    </ul>
-
-
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Item Name</th>
-                                                <th>Qty</th>
-                                                <th>Rate</th>
-                                                <template v-if="selectedCustomer != null">
-                                                    <th>GST Tax</th>
-                                                    <th>CESS Tax</th>
-                                                </template>
-                                                <th>Amount</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(item, index) in invoice_items">
-
-
-
-
-                                                <td style="width: 300px;">
-                                                    <template v-if="checkCustomerGst">
-
-                                                        <v-select  :options="items" label="name" v-model="item.item_id" @input="setItem(index, item)" :reduce="item => item.id" 
-                                                            >
-                                                            <template #search="{attributes, events}">
-                                                                <input
-                                                                class="vs__search"
-                                                                :required="!item.item_id"
-                                                                v-bind="attributes"
-                                                                v-on="events"
-                                                                />
-                                                            </template>
-                                                        </v-select>
-                                                        <div v-if="isError && index == errorIndex">
-                                                            <p class="text-danger">@{{message}}</p>
-                                                        </div>
-
-                                                    </template>
-
-                                                    <template v-else>
-                                                     <v-select  :options="items_out" label="name" v-model="item.item_id" :reduce="item => item.id" @input="setOutItem(index, item)">
-                                                        <template #search="{attributes, events}">
-                                                            <input
-                                                            class="vs__search"
-                                                            :required="!item.item_id"
-                                                            v-bind="attributes"
-                                                            v-on="events"
-                                                            />
-                                                        </template>
-                                                    </v-select>
-                                                    <div v-if="isError && index == errorIndex">
-                                                        <p class="text-danger">@{{message}}</p>
-                                                    </div>
-
-                                                </template>
-
-                                            </td>
-
-
-                                            <td style="width: 150px;"><input  class="form-control amount" type="number" :min="1" v-model="item.quantity" @input="setRecalculatedamount(index)">
-                                            </td>
-
-                                            <td style="width: 160px;"><input class="form-control amount" type="text" placeholder="0" v-model="item.price" :min="1" @input="setRecalculatedamount(index)" id="test" onkeypress="return myfunction(event);" ></td>
-
-                                            <template v-if="selectedCustomer != null">
-                                                <template v-if="checkCustomerGst">
-
-                                                    <td>
-                                                        <v-select  :options="taxes" label="g_name" v-model="item.group_type_name"   @input="setRecalculatedamount(index)" >
-                                                        </v-select>
-
-                                                    </td>
-                                                    <td>
-                                                     <v-select  :options="cess_taxes" label="c_name" v-model="item.cess_group_type_name"  @input="setRecalculatedamount(index)"  >
-                                                     </v-select>
-                                                 </td>
-
-                                             </template>
-                                             <template v-else>
-                                                 <td>
-                                                    <v-select  :options="taxes_out" label="g_name" v-model="item.group_type_name"  @input="setRecalculatedamount(index)"  >
-                                                    </v-select>
-
-                                                </td>
-                                                <td>
-                                                 <v-select  :options="cess_taxes_out" label="c_name" v-model="item.cess_group_type_name"  @input="setRecalculatedamount(index)"  >
-                                                 </v-select>
-                                             </td>
-
-
-                                         </template>
-                                     </template>
-
-                                     <td style="width: 200px;">
-
-                                        <input class="form-control amount" type="text" v-model="item.total_amount" disabled="">
-
-                                    </td>
-                                    <td  style="color: red" v-if="index != 0" @click="removeRow(index)">X</td>
-                                    <td v-else></td>
-                                </tr>
-
-
-
-                                <tr>
-                                    <td><a v-if="!isError && invoice_items[invoice_items.length-1].price > 0 && errors.length == 0" href="" @click.prevent="addItem" class="btn btn-primary ">Add Row</a>
-
-                                    </td>  
-                                     
-
-
-                                  
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-
-                                </tr>
-
-                            </tbody>
-                        </table>
-
-                        <table class="table table-hover">
-                            <tbody>
-
-
-                                <tr>
-
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="amount">Sub total</td>
-                                    <td class="amount">@{{taxSubTotalNew()}}</td>
-                                    <input type="hidden" name="sub_total" :value="taxSubTotalNew()">
-                                </tr>
-
-
-                                <template v-for="item in taxes">
-
-                                    <template v-for="tax in item.items">
-                                        <tr v-if="getGstamountInclusive(tax.id, item.items.length) > 0">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="amount">@{{tax.name}}
-                                             <input type="hidden" name="gst_id[]" :value="tax.id">
-                                             <input type="hidden" name="gst_name[]" :value="tax.name">
-                                             <input type="hidden" name="gst_percentage[]" :value="tax.percent">
-                                             <input type="hidden" name="gst_amount[]" :value="getGstamountInclusive(tax.id, item.items.length)">
-                                         </td>
-                                         <td class="amount">@{{getGstamountInclusive(tax.id, item.items.length)}}</td>
-
-                                     </tr>
-                                 </template>
-                             </template>
-
-
-
-                             <template v-for="item in taxes_out">
-
-                                <template v-for="tax in item.items">
-                                    <tr v-if="getGstamountInclusive(tax.id, item.items.length) > 0">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="amount">@{{tax.name}}
-                                         <input type="hidden" name="gst_id[]" :value="tax.id">
-                                         <input type="hidden" name="gst_name[]" :value="tax.name">
-                                         <input type="hidden" name="gst_percentage[]" :value="tax.percent">
-                                         <input type="hidden" name="gst_amount[]" :value="getGstamountInclusive(tax.id, item.items.length)">
-                                     </td>
-                                     <td class="amount">@{{getGstamountInclusive(tax.id, item.items.length)}}</td>
-                                 </tr>
-                             </template>
-                         </template>
-
-
-                         <template v-for="item in cess_taxes">
-
-                            <template v-for="tax in item.items">
-                                <tr v-if="getCessAmountInclusive(tax.id, item.items.length) > 0">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="amount">@{{tax.name}}
-                                     <input type="hidden" name="cess_id[]" :value="tax.id">
-                                     <input type="hidden" name="cess_name[]" :value="tax.name">
-                                     <input type="hidden" name="cess_percentage[]" :value="tax.percent">
-                                     <input type="hidden" name="cess_amount[]" :value="getCessAmountInclusive(tax.id, item.items.length)">
-                                 </td>
-                                 <td class="amount">@{{getCessAmountInclusive(tax.id, item.items.length)}}</td>
-                             </tr>
-                         </template>
-                     </template>
-
-
-
-
-                     <tr>
-
-
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="amount">Round Off</td>
-                        <td class="amount">@{{originalRoundOff}}</td>
-                                    <input type="hidden" name="roundoff" :value="originalRoundOff">
-                    </tr>
-                    <tr>
-
-
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="amount">Total</td>
-                        <td class="amount">@{{totalRounded}}</td>
-                                    <input type="hidden" name="final_amount" :value="totalRounded">
-                    </tr>
-                    <tr>
-
-
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="amount">Paid Amount</td>
-                        <template v-if = "pay == 2">
-                            <td class="amount" style="width: 120px;"><input type="number" name="paid_amount" class="form-control" v-model="paid" disabled=""></td>
-                        </template>
-                        <template v-else>
-                         <td class="amount" style="width: 120px;"><input type="number" name="paid_amount" class="form-control" v-model="paid"></td>
-                     </template>
-                 </tr> 
-                 <tr>
-
-
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="amount">Balance Amount</td>
-
-                    <template v-if="paid == 0">
-                        <td class="amount">0</td>
-                    </template>
-
-                    <template v-else>
-
-                        <td class="amount">@{{getPaidAmount}}</td>
-                    </template>
-
-
-
+<div class="container">
+    <h2>Edit Purchase Invoice</h2>
+
+    <form action="/purchase-invoices/{{ $purchaseInvoice->id }}" method="POST" class="col-md-12" autocomplete="off">
+        @csrf
+        @method('PUT')
+
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label>Supplier Phone</label>
+                <input type="text" id="supplierPhone" class="form-control" name="supplier_phone" value="{{ $purchaseInvoice->supplier_phone }}">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label>Supplier Name</label>
+                <input type="text" id="supplierName" class="form-control" name="supplier_name" value="{{ $purchaseInvoice->supplier_name }}">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label>Invoice No</label>
+                <input type="text" class="form-control" name="invoice_no" value="{{ $purchaseInvoice->invoice_no }}">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label>Invoice Date</label>
+                <input type="date" class="form-control" name="invoice_date" value="{{ $purchaseInvoice->invoice_date }}">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label>Payment Method</label>
+                <select class="form-select" name="payment_method">
+                    @foreach($paymentMethods as $method)
+                        <option value="{{ $method->id }}" {{ $purchaseInvoice->payment_method == $method->id ? 'selected' : '' }}>{{ $method->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <table class="table table-bordered" id="itemTable">
+            <thead>
+                <tr>
+                    <th>Bar Code</th>
+                    <th>Item Name</th>
+                    <th>QTY</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th>Action</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach($purchaseInvoice->PurchaseItem as $index => $item)
+                <tr>
+                    <td><input type="text" name="items[{{ $index }}][barcode]" class="form-control barcode" value="{{ $item->barcode }}"></td>
+                    <td>
+                        <select name="items[{{ $index }}][id]" class="form-control itemName">
+                            <option value=""></option>
+                            @foreach($items as $product)
+                                <option value="{{ $product->id }}" {{ $product->id == $item->item_id ? 'selected' : '' }}>{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input type="number" name="items[{{ $index }}][qty]" class="form-control qty" value="{{ $item->quantity }}" min="1"></td>
+                    <td><input type="number" name="items[{{ $index }}][rate]" class="form-control rate" value="{{ $item->rate }}" min="0"></td>
+                    <td class="amount">{{ number_format($item->qty * $item->rate, 2) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end"><strong>Sub Total:</strong></td>
+                    <td id="subTotal">0.00</td>
+                    <td></td>
+                </tr>
+                <tr id="gstRow" style="display:none;">
+                    <td colspan="4" class="text-end"><strong>GST 5%:</strong></td>
+                    <td id="gstAmount">0.00</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                    <td id="totalAmount">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
-    </div>
+
+        <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary col-md-2 offset-md-5 btn-sm">Update</button>
+            <a class="btn btn-danger col-md-2 btn-sm" href='/purchase-invoices'>Cancel</a>
+        </div>
+    </form>
 </div>
-</div>
-</div>
 
-
-{{-- save code --}}
-
-                                     <template v-for="item in invoice_items">
-                                         <input type="hidden" name="iitem[]" :value="JSON.stringify(item)">
-                                        <input type="hidden" name="item_id[]" :value="item.item_id">
-                                        <input type="hidden" name="price[]" :value="item.price">
-                                        <input type="hidden" name="price_without_tax[]" :value="item.price_without_tax">
-                                        <template v-if="item.group_type_name != null">
-                                            
-                                        <input type="hidden" name="gst_group_id[]" :value="item.group_type_name.id">
-                                        </template>
-                                         <template v-for="i in item.items">
-                              
-                               <input type="hidden" name="total_gst_amount[]" :value="item.gst_amount">
-                                <input type="hidden" name="total_cess_amount[]" :value="item.cess_amount">
-                               
-
-                           </template> 
-                                        <input type="hidden" name="total_gst_amount[]" :value="item.gst_amount">
-                                        <template v-if="item.cess_group_type_name != null">
-                                            
-                                        <input vif="item.cess_group_type_name != null" type="hidden" name="cess_group_id[]" :value="item.cess_group_type_name.id">
-                                        </template>
-                                        <input type="hidden" name="total_cess_amount[]" :value="item.cess_amount">
-                                        <input type="hidden" name="quantity[]" :value="item.quantity">
-                                         
-                                        <input type="hidden" name="total_amount[]" :value="item.total_amount">
-                                        
-                                    </template>
-
-
-
-<div class="col-md-6 offset-md-5">
-
- <button type="submit" class="btn btn-primary btn-sm" v-if="isError == false" >Submit</button>
-
-
-
- <a class="btn btn-danger btn-sm" href='/purchase-invoices'>Cancel </a>
-
-
-</div>
-</form>
-
-
-
-</div>
-</div>
-</div>
-</div>
-<style>
-    .amount {
-        text-align: right;
-    }
-</style>
-
-
-@endsection
-
-@section("js")
-<style>
-    button.vs__clear {
-        display: none;
-    }
-</style>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
-
-<!-- use the latest vue-select release -->
-<script src="https://unpkg.com/vue-select@latest"></script>
-<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 <script>
-function myfunction(e) {
-  return e.charCode === 0 || ((e.charCode >= 48 && e.charCode <= 57) || (e.charCode == 46 && document.getElementById("test").value.indexOf('.') < 0));
-}
-</script>
+document.addEventListener('DOMContentLoaded', () => {
+    const gstRow = document.getElementById('gstRow');
+    const phoneInput = document.getElementById('supplierPhone');
+    const nameInput = document.getElementById('supplierName');
 
+    function calculateTotals() {
+        let rows = document.querySelectorAll("#itemTable tbody tr");
+        let subTotal = 0;
 
-<script  >
-    Vue.component('v-select', VueSelect.VueSelect);
-    $(document).ready(
-        function() { 
-
-
-            $('.date-picker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true
-            });
-
-                //Initialize Select2 Elements
-                $('.select2').select2({
-                  theme: 'bootstrap4'
-              })
-
-            });
-    $(document).ready(
-        function() { 
-
-
-          $('#datepicker').datepicker({
-           startDate: new Date()
-       })
-
-
-      });
-
-
-
-    var app = new Vue({
-      el: '#invoice-app',
-      data: {
-        tds: [],
-
-        originalRoundOff:0,
-        total:0,
-        totalRounded:0,
-        cess:0,
-        errors: [],
-        gst:9,
-        isError : false,
-        error : [],
-        errorIndex:null,
-        errorQty:null,
-        itemQuantityTotal: [],
-        selectedCustomer: {
-            id: "{{$sales->vendor_id}}",
-            name: "{{$sales->vendor->name}}",
-            state_id: "{{$sales->vendor->state_id}}",
-        },
-        gsts: [],
-         paid:"{{$sales->paid_amount}}",
-        pay : 2, 
-        message: 'Product Should be Unique',
-        customers: [
-        @foreach($customers as $a)
-        {
-            id: "{{$a->id}}",
-            name: "{{$a->name}}",
-            state_id: "{{$a->State->id}}",
-            state: "{{$a->State->name}}",
-        },       
-        @endforeach 
-        ],
-
-        items: [
-        @foreach ($items as $invoice_item)
-        {
-            id: "{{$invoice_item->id}}",
-            name: "{{$invoice_item->name}}",
-            price:null,
-            pricep:"{{$invoice_item->ProductTax->group_type_name}}",
-            pricep_id:"{{$invoice_item->ProductTax->id}}",
-
-            pricec:"{{$invoice_item->CessProductTax->group_type_name}}",
-            pricec_id:"{{$invoice_item->CessProductTax->id}}",
-            tax_items: [
-            @foreach ($invoice_item->taxGroup as $i)
-            {   
-                id: "{{$i->Tax->id}}",
-                name: "{{$i->Tax->name}}",
-                percent: "{{$i->tax_percentage}}",
-            },
-            @endforeach
-            ],  
-            cess_tax_items: [
-            @foreach ($invoice_item->cesstaxGroup as $i)
-            {   
-                id: "{{$i->Tax->id}}",
-                name: "{{$i->Tax->name}}",
-                percent: "{{$i->tax_percentage}}",
-            },
-            @endforeach
-            ], 
-            
-
-            
-
-        },
-        @endforeach
-        ],
-
-        items_out: [
-        @foreach ($items_out as $invoice_item)
-        {
-            id: "{{$invoice_item->id}}",
-            name: "{{$invoice_item->name}}",
-            price:null,
-            pricep:"{{$invoice_item->IgstProductTax->group_type_name}}",
-            pricep_id:"{{$invoice_item->IgstProductTax->id}}",
-
-            pricec:"{{$invoice_item->CessProductTax->group_type_name}}",
-            pricec_id:"{{$invoice_item->CessProductTax->id}}",
-            tax_items: [
-            @foreach ($invoice_item->igsttaxGroup as $i)
-            {   
-                id: "{{$i->Tax->id}}",
-                name: "{{$i->Tax->name}}",
-                percent: "{{$i->tax_percentage}}",
-            },
-            @endforeach
-            ],  
-            cess_tax_items: [
-            @foreach ($invoice_item->cesstaxGroup as $i)
-            {   
-                id: "{{$i->Tax->id}}",
-                name: "{{$i->Tax->name}}",
-                percent: "{{$i->tax_percentage}}",
-            },
-            @endforeach
-            ], 
-            
-
-            
-
-        },
-        @endforeach
-        ],
-        taxes:[
-        @foreach ($taxes as $gst)
-        {
-            id: "{{$gst->id}}",
-            g_name: "{{$gst->group_type_name}}",
-            items: [
-            @foreach ($gst->taxGroup as $i)
-            {
-               id :"{{$i->Tax->id}}",
-               name : "{{$i->Tax->name ?? ''}}",
-               percent : "{{$i->tax_percentage}}",
-           },
-           @endforeach
-           ]
-
-
-       },
-       @endforeach
-       ],
-       taxes_out:[
-       @foreach ($taxes_out as $gst)
-       {
-        id: "{{$gst->id}}",
-        g_name: "{{$gst->group_type_name}}",
-        items: [
-        @foreach ($gst->taxGroup as $i)
-        {
-            id :"{{$i->Tax->id}}",
-            name : "{{$i->Tax->name ?? ''}}",
-            percent : "{{$i->tax_percentage}}",
-        },
-        @endforeach
-        ]
-
-    },
-    @endforeach
-    ],
-    cess_taxes:[
-    @foreach ($cess_taxes as $cess)
-    {
-        id: "{{$cess->id}}",
-        c_name: "{{$cess->group_type_name}}",
-        items: [
-        @foreach ($cess->taxGroup as $i)
-        {
-           id :"{{$i->Tax->id}}",
-           name : "{{$i->Tax->name ?? ''}}",
-           percent : "{{$i->tax_percentage}}",
-       },
-       @endforeach
-       ]
-
-
-   },
-   @endforeach
-   ],
-   cess_taxes_out:[
-   @foreach ($cess_taxes_out as $tax)
-   {
-    id: "{{$tax->id}}",
-    c_name: "{{$tax->group_type_name}}",
-    items: [
-    @foreach ($tax->taxGroup as $i)
-    {
-       id :"{{$i->Tax->id}}",
-       name : "{{$i->Tax->name ?? ''}}",
-       percent : "{{$i->tax_percentage}}",
-   },
-   @endforeach
-   ]
-
-},
-@endforeach
-],
-invoice_items: [
- @foreach ($invoice_items as $item)
-{
-
-    item_id:"{{$item->item_id}}",
-    quantity: parseFloat("{{$item->quantity}}"),
-    price: parseFloat("{{$item->item_price}}"),
-    cgst: 0,
-    sgst: 0,
-    igst: 0,
-    gst_tax:0,
-    cess_tax:0,
-    price_without_tax:"{{$item->price_without_tax}}",
-    selectedItem:null,
-    taxItems: [],
-     group_type_name: {
-        id: {{$item->Gst[0]->group_id}},
-        g_name: "{{$item->Gst[0]->name}}",
-        items: [
-        
-
-           @foreach ($item->Gst[0]->GstItem as $element)
-         
-        {
-            id: {{$element->tax_item_id}},
-            name: "{{$element->name}}",
-            percent: {{$element->percentage}},
-        },
-           @endforeach
-
-        ]
-    }, 
-    cess_group_type_name: {
-
-        id: {{$item->Cess[0]->group_id}},
-        c_name: "{{$item->Cess[0]->name}}",
-        items: [
-        
-
-           @foreach ($item->Cess[0]->GstItem as $element)
-         
-        {
-            id: {{$element->tax_item_id}},
-            name: "{{$element->name}}",
-            percent: {{$element->percentage}},
-        },
-           @endforeach
-
-        ]
-    },
-    gst_amount: 0,
-    cess_amt: 0,
-    cess_tax:0,
-    total_amount: {{$item->total_amount}},
-    pricep : 0,
-},
-@endforeach
-],
-},
-
-created() {
-    for (var i = 0; i < this.invoice_items.length; i++) {
-        
-    this.setRecalculatedamount(i);
-    }
-    },
-
-computed: {
-    calculateQuantity: function () {
-      return _(this.invoice_items)
-      .groupBy('item_id')
-      .map((objs, key) => ({
-
-        'item_id': key,
-            // 'quantity': _.sumBy(objs, 'quantity')
-            'quantity': _.sumBy(objs, item => Number(item.quantity))
-            
-
-        }))
-      .value();  
-  },
-  checkCustomerGst: function () {
-
-    for (var i = this.customers.length - 1; i >= 0; i--) {
-        if(this.selectedCustomer != null) {
-      if(this.customers[i].id == this.selectedCustomer.id) {
-        return this.customers[i].state_id == 27;
-    }
-        }
-}
-
-},
-
-getPaidAmount:function(){
-    var paid = this.paid;
-    var amt = paid - (this.totalRounded) ;
-    return parseFloat(amt).toFixed(2);
-},
-
-// created() {
-//     for (var i = 0; i < this.invoice_items.length; i++) {
-        
-//     this.setRecalculatedamount(i);
-//     }
-//     },
-
-
-
-
-},
-methods: {
-
-   getRoundOffNew: function () {
-
-        var normal_total = 0;
-
-        for (var i = 0; i < this.invoice_items.length; i++) {
-            normal_total = parseFloat(normal_total) + parseFloat(this.invoice_items[i].total_amount);
-        }
-
-        // var rounded_value = Math.round(this.total);
-        this.totalRounded = normal_total;
-
-
-        if(this.total != normal_total) {
-            var roundoff = parseFloat(normal_total) - parseFloat(this.total);
-        }
-        else{
-           var roundoff = 0; 
-        }
-
-
-
-        this.originalRoundOff = parseFloat(roundoff).toFixed(2);
-
-       
-
-    },
-
-    getTotalAmountNew:function(){
-
-        var tax = 0;
-        var tot = 0;
-
-
-        this.invoice_items.forEach(function(entry) {
-            tax += parseFloat(entry.gst_amount);
-            tax += parseFloat(entry.cess_amount);
-            console.log("tax " + tax);
+        rows.forEach(row => {
+            let qty = parseFloat(row.querySelector(".qty").value) || 0;
+            let rate = parseFloat(row.querySelector(".rate").value) || 0;
+            let amount = qty * rate;
+            row.querySelector(".amount").textContent = amount.toFixed(2);
+            subTotal += amount;
         });
 
+        document.querySelector("#itemTable #subTotal").textContent = subTotal.toFixed(2);
 
-        tot = parseFloat(this.taxSubTotalNew()) + parseFloat(tax);
-        console.log("tax " + tax);
-        this.total = parseFloat(tot).toFixed(2);
-        this.getRoundOffNew();
-    },
-
-
-
-    taxSubTotalNew:function(){
-
-        var sum = 0;
-
-        this.invoice_items.forEach(function(entry) {
-            sum += entry.price_without_tax * entry.quantity;
-        });
-
-
-        return parseFloat(sum).toFixed(2);
-    },
-    checkDuplicate: function (new_item_id,index) {
-
-
-     var count = this.invoice_items.filter((obj) => obj.item_id === new_item_id.item_id).length;
-
-     if (count >= 2) {
-        this.isError = true;
-        this.errorIndex = index;
-    } else {
-        this.isError = false;
-        this.errorIndex = null;
+        let gst = subTotal * 0.05;
+        document.querySelector("#itemTable #gstRow").style.display = '';
+        document.querySelector("#itemTable #gstAmount").textContent = gst.toFixed(2);
+        document.querySelector("#itemTable #totalAmount").textContent = (subTotal + gst).toFixed(2);
     }
 
-},
+    // Add new row
+    document.getElementById('addRow').addEventListener('click', () => {
+        let tbody = document.querySelector("#itemTable tbody");
+        let rowCount = tbody.querySelectorAll('tr').length;
+        let newRow = document.createElement('tr');
 
-
-
-getCessAmountInclusive: function (id, length) {
-    var self = this;
-    var amount = 0;
-
-    this.invoice_items.forEach(function(entry) {
-
-        if(entry.cess_group_type_name != null) {
-
-            entry.cess_group_type_name.items.forEach(function(tax) {
-                if(tax.id == id && entry.item_id && entry.cess_amount > 0) {
-                        // console.log("old gst amount " + entry.cess_amount);
-                        amount += parseFloat(entry.cess_amount);
-                    }
-                });
-        }
+        newRow.innerHTML = `
+            <td><input type="text" name="items[${rowCount}][barcode]" class="form-control barcode"></td>
+            <td>
+                <select name="items[${rowCount}][id]" class="form-control itemName">
+                    ${[...document.querySelectorAll('#itemTable .itemName option')].map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
+                </select>
+            </td>
+            <td><input type="number" name="items[${rowCount}][qty]" class="form-control qty" value="1" min="1"></td>
+            <td><input type="number" name="items[${rowCount}][rate]" class="form-control rate" value="0" min="0"></td>
+            <td class="amount">0.00</td>
+            <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+        `;
+        
+        tbody.appendChild(newRow);
+        calculateTotals();
     });
 
-    amount = amount / length;
-
-        // console.log("total gst " + amount);
-
-        return parseFloat(amount).toFixed(2);
-
-    },   
-    getGstamountInclusive: function (id, length) {
-        var self = this;
-        var amount = 0;
-        this.invoice_items.forEach(function(entry) {
-
-            if(entry.group_type_name != null) {
-
-                entry.group_type_name.items.forEach(function(tax) {
-                    if(tax.id == id && entry.item_id && entry.gst_amount > 0) {
-                        // console.log("old gst amount " + entry.gst_amount);
-                        amount += parseFloat(entry.gst_amount);
-                    }
-                });
+    // Table event listeners (barcode/item/qty/rate)
+    document.querySelector('#itemTable').addEventListener('change', e => {
+        const row = e.target.closest('tr');
+        if (e.target.classList.contains('barcode')) {
+            const barcode = e.target.value.trim();
+            if (barcode) {
+                fetch(`/get-purchase-item-by-barcode?barcode=${encodeURIComponent(barcode)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data) {
+                            row.querySelector('.itemName').value = data.id;
+                            row.querySelector('.rate').value = data.price;
+                        } else {
+                            row.querySelector('.itemName').value = '';
+                            row.querySelector('.rate').value = '';
+                        }
+                        calculateTotals();
+                    });
             }
-        });
+        }
 
-        amount = amount / length;
-
-        // console.log("total gst " + amount);
-
-        return parseFloat(amount).toFixed(2);
-
-    },  
-
-
-    getGstAmountCustom: function (index) {
-        console.log("selected item" + index);
-        var item = this.invoice_items[index];
-        console.log(item);
-        var percentage = 0;
-        item.group_type_name.items.forEach(function(entry) {
-            percentage += parseFloat(entry.percent);
-        });
-        console.log("percent" + percentage);
-
-        var newp = parseFloat(percentage);
-        item.cess_group_type_name.items.forEach(function(entry) {
-            newp += parseFloat(entry.percent);
-        });
-
-
-
-        var decimalp = (newp / 100) + 1;
-        console.log("percentage" + decimalp);
-        console.log("real percentage" + percentage);
-
-        var price = this.invoice_items[index].price;
-
-        var price_without_tax = price / decimalp;
-
-        this.invoice_items[index].price_without_tax =  parseFloat(price_without_tax).toFixed(2);
-        this.invoice_items[index].gst_amount =  (price_without_tax * (1+(percentage/ 100))) - price_without_tax;
-        this.invoice_items[index].gst_amount = parseFloat(this.invoice_items[index].gst_amount).toFixed(2);
-
-        this.invoice_items[index].gst_amount = this.invoice_items[index].gst_amount * this.invoice_items[index].quantity;
-
-        console.log("original price " + price_without_tax);
-
-    },
-
-    getCessAmountCustom: function (index) {
-        console.log("selected item" + index);
-        var item = this.invoice_items[index];
-        console.log(item);
-        var percentage = 0;
-        item.cess_group_type_name.items.forEach(function(entry) {
-            percentage += parseFloat(entry.percent);
-        });
-        console.log("percent" + percentage);
-
-
-        var newp = percentage;
-        item.group_type_name.items.forEach(function(entry) {
-            newp += parseFloat(entry.percent);
-        });
-
-        var decimalp = (newp / 100) + 1;
-        console.log("percentage" + decimalp);
-
-        var price = this.invoice_items[index].price;
-
-        var price_without_tax = price / decimalp;
-
-        this.invoice_items[index].cess_amount =  (price_without_tax * (1+(percentage/ 100))) - price_without_tax;
-        this.invoice_items[index].cess_amount = parseFloat(this.invoice_items[index].cess_amount).toFixed(2);
- this.invoice_items[index].cess_amount = this.invoice_items[index].cess_amount * this.invoice_items[index].quantity;
-
-        console.log("original price " + price_without_tax);
-
-    },
-    totalItemAmount: function (index) {
-        // for (var i = 0; i < this.invoice_items.length; i++) {
-            this.invoice_items[index].total_amount = this.invoice_items[index].price * this.invoice_items[index].quantity;
-
-            this.invoice_items[index].total_amount = parseFloat(this.invoice_items[index].total_amount).toFixed(2);
-
-        // }
-    },
-
-    setRecalculatedamount: function (index) {
-        this.totalItemAmount(index);
-        // this.checkQuantity(index);
-
-        this.getGstAmountCustom(index);
-        this.getCessAmountCustom(index);
-
-        this.getTotalAmountNew();
-
-           
-        },
-
-
-
-
-
-       
-
-   addItem: function () {
-   
-    this.invoice_items.push({
-         item_id: 0,
-    quantity: 1,
-    price: null,
-    cgst: 0,
-    sgst: 0,
-    igst: 0,
-    gst_tax:0,
-    cess_tax:0,
-    price_without_tax:0,
-    selectedItem: null,
-    taxItems: [],
-    
-    gst_amount: 0,
-    cess_amt: 0,
-    cess_tax:0,
-    total_amount: 0,
-    pricep : 0,
+        if (e.target.classList.contains('itemName')) {
+            const productId = e.target.value;
+            if (productId) {
+                fetch(`/get-purchase-item-by-id?id=${encodeURIComponent(productId)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data) {
+                            row.querySelector('.barcode').value = data.barcode;
+                            row.querySelector('.rate').value = data.price;
+                        } else {
+                            row.querySelector('.barcode').value = '';
+                            row.querySelector('.rate').value = '';
+                        }
+                        calculateTotals();
+                    });
+            } else {
+                row.querySelector('.barcode').value = '';
+                row.querySelector('.rate').value = '';
+                calculateTotals();
+            }
+        }
     });
-},
 
-setItem: function (index, item_new) {
-    // console.log(index);
-    this.checkDuplicate(item_new,index);
-    // this.checkQuantity(index);
-    var select_item = this.items.find(x => x.id === item_new.item_id);
-    console.log(select_item);
-    console.log(select_item.tax_items);
-    this.invoice_items[index].price = null;
-    this.invoice_items[index].group_type_name = {
-        id: select_item.pricep_id,
-        g_name: select_item.pricep,
-        items: select_item.tax_items,
-    }; 
-    this.invoice_items[index].cess_group_type_name = {
-        id: select_item.pricec_id,
-        c_name: select_item.pricec,
-        items: select_item.cess_tax_items,
-    }; 
-    // this.invoice_items[index].cess_group_type_name = {
-    //     id: select_item.pricec_id,
-    //     c_name: select_item.pricec,
-    //     items: select_item.cess_tax_items,
-    // };
-    // this.invoice_items[index].total_amount = this.calculateTotalamount(index);
-
-},
-setOutItem: function (index, item_new) {
-    // console.log(index);
-    this.checkDuplicate(item_new,index);
-    // this.checkQuantity(index);
-    var select_item = this.items_out.find(x => x.id === item_new.item_id);
-    console.log(select_item);
-    console.log(select_item.tax_items);
-    this.invoice_items[index].price = null;
-    this.invoice_items[index].group_type_name = {
-        id: select_item.pricep_id,
-        g_name: select_item.pricep,
-        items: select_item.tax_items,
-    }; 
-    this.invoice_items[index].cess_group_type_name = {
-        id: select_item.pricec_id,
-        c_name: select_item.pricec,
-        items: select_item.cess_tax_items,
-    }; 
-    // this.invoice_items[index].cess_group_type_name = {
-    //     id: select_item.pricec_id,
-    //     c_name: select_item.pricec,
-    //     items: select_item.cess_tax_items,
-    // };
-    // this.invoice_items[index].total_amount = this.calculateTotalamount(index);
-},
-
-removeRow: function(index) {
-    // console.log("Removing", index);
-   
-    this.invoice_items.splice(index, 1);
-    if (index == this.errorIndex) {
-
-        this.isError = false;
-        this.errorIndex  = null;
-    }
-     for (var i = 0; i < this.invoice_items.length; i++) {
-        
-    this.setRecalculatedamount(i);
-    }
-     this.getTotalAmountNew();
-},
-refreshCustomer: function(){
-   this.invoice_items= [
-   {
-    item_id: 0,
-    quantity: 1,
-    price: null,
-    cgst: 0,
-    sgst: 0,
-    igst: 0,
-    gst_tax:0,
-    cess_tax:0,
-    selectedItem: null,
-     price_without_tax:0,
-    taxItems: [],
-    group_type_name: {
-        id: 0,
-        g_name: "",
-        items: [
-        {
-            id: 0,
-            name: "",
-            percent: 0,
+    document.querySelector('#itemTable').addEventListener('input', e => {
+        if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
+            calculateTotals();
         }
-        ]
-    }, 
-    cess_group_type_name: {
-        id: 0,
-        c_name: "",
-        items: [
-        {
-            id: 0,
-            name: "",
-            percent: 0,
+    });
+
+    // Remove row
+    document.querySelector("#itemTable tbody").addEventListener('click', e => {
+        if (e.target.classList.contains('removeRow')) {
+            let row = e.target.closest('tr');
+            let allRows = document.querySelectorAll("#itemTable tbody tr");
+            if (allRows.length > 1) {
+                row.remove();
+                calculateTotals();
+            } else {
+                alert("Can't remove the last row");
+            }
         }
-        ]
-    },
-    gst_amount: 0,
-    cess_amt: 0,
-    cess_tax:0,
-    total_amount: 0,
-    pricep : 0,
-}
-]
+    });
 
+    // Supplier lookup
+    phoneInput.addEventListener('input', () => {
+        let phone = phoneInput.value.trim();
+        if (phone.length >= 5) {
+            fetch(`/get-vendor-by-phone?phone=${encodeURIComponent(phone)}`)
+                .then(res => res.json())
+                .then(data => {
+                    nameInput.value = data?.name ?? '';
+                });
+        } else {
+            nameInput.value = '';
+        }
+    });
 
-},
-
-}
-})
-
+    calculateTotals();
+});
 </script>
-
-@stop
+@endsection

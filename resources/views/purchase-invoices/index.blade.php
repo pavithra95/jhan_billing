@@ -107,14 +107,14 @@
                             <td>{{ $key + 1 }}</td>
 
                             <td><a href="/{{$url}}/{{ $item->id }}">{{$item->invoice_no}}</td>
-                            <td>{{$item->reference_no}}</td>
+                            <td>{{$item->invoice_no}}</td>
                             <td>{{ $item->invoice_date }}</td>
                             <td>{{ $item->vendor->name}}</td>
                             <td>{{ $item->vendor->phone}}</td>
                             <td>{{ number_format($item->total_amount, 2) }}</td>
                             
                              <td>
-                              <a href="/create-payment-from-purchase-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a>
+                              <!-- <a href="/create-payment-from-purchase-invoice/{{$item->id}}"><i class= "fa fa-inr"></i></a> -->
                               <a href="/purchase-invoices/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
                                 @if(auth()->user()->privilege == "admin")
                               <a href="/purchase-invoices/{{$item->id}}/delete"><i class="fa fa-trash" ></i></a>

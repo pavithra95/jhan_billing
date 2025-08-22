@@ -1,211 +1,74 @@
 @extends('layout.master')
-@section('title', 'ZetBooks')
-@section('content_header')
-@stop
+
 @section('content')
-<div class="row" id="invoice-app">
-<div class="col-12">
-<div class="card">
-<div class="card-body">
-<div class="row">
-   <div class="col-md-12">
-      <h4 class="m-0 text-dark col-md-6 float-left">{{$title}}</h4>
-      <a class="btn btn-primary float-right margin-right btn-sm" href='/purchase-return-invoices'>Back </a>
-      @if(auth()->user()->privilege == "admin")
-      <button type="button" class="btn btn-danger float-right margin-right btn-sm" data-toggle="modal" data-target="#exampleModalLong">
-      Delete
-      </button>
-      @endif
-      <!--  <a class="btn btn-danger float-right margin-right btn-sm" href="/{{$url}}/{{ $sales->id }}/delete">Delete</a>
-         -->
-      @if ($sales->paid_amount != $sales->total_amount)
-      <a class="btn btn-success float-right margin-right btn-sm" href="/create-payment-from-purchase-return-invoice/{{ $sales->id }}"> Record Payment </a>
-      @endif
-      <a class="btn btn-warning float-right margin-right btn-sm" href="/{{$url}}/{{ $sales->id }}/edit"> Edit </a>
-   </div>
+<div class="container">
+    <h2>Purchase Return Invoice #{{ $invoice->invoice_no }}</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <strong>Supplier Phone:</strong> {{ $invoice->supplier_phone }}
+        </div>
+        <div class="col-md-4">
+            <strong>Supplier Name:</strong> {{ $invoice->supplier_name }}
+        </div>
+        <div class="col-md-4">
+            <strong>Against Invoice No:</strong> {{ $invoice->against_invoice_no }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <strong>Invoice Date:</strong> {{ $invoice->invoice_date }}
+        </div>
+        <div class="col-md-4">
+            <strong>Payment Method:</strong> {{ $invoice->payment->name ?? '' }}
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Bar Code</th>
+                <th>Item Name</th>
+                <th>QTY</th>
+                <th>Rate</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $subTotal = 0; @endphp
+            @foreach($invoice->purchaseReturnItem as $item)
+                @php
+                    $amount = $item->quantity * $item->rate;
+                    $subTotal += $amount;
+                @endphp
+                <tr>
+                    <td>{{ $item->barcode }}</td>
+                    <td>{{ $item->item->name ?? '' }}</td>
+                    <td>{{ $item->quantity }}</td>
+                    <td>{{ number_format($item->rate, 2) }}</td>
+                    <td>{{ number_format($amount, 2) }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="text-end"><strong>Sub Total:</strong></td>
+                <td>{{ number_format($subTotal, 2) }}</td>
+            </tr>
+            @php $gst = $subTotal * 0.05; @endphp
+            <tr>
+                <td colspan="4" class="text-end"><strong>GST 5%:</strong></td>
+                <td>{{ number_format($gst, 2) }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                <td>{{ number_format($subTotal + $gst, 2) }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <a href="{{ route('purchase-return-invoices.edit', $invoice->id) }}" class="btn btn-primary">Edit</a>
+    <a href="{{ route('purchase-return-invoices.index') }}" class="btn btn-secondary">Back</a>
 </div>
-<br>
-<div class="row">
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('customer_id')) text-danger @endif">
-         <label>Supplier</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->vendor->name }}</span>
-         </div>
-      </div>
-   </div>
-   <!--<div class="col-md-4">
-      <div class="form-group @if($errors->has('Vendor_id')) text-danger @endif">
-         <label>Vendor Phone</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->vendor->phone }}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('Vendor_id')) text-danger @endif">
-         <label>Vendor State</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->vendor->State->name }}</span>
-         </div>
-      </div>
-   </div>-->
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('invoice_no')) text-danger @endif">
-         <label for=""> Debit Note No</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->invoice_no}}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group ">
-         <label for=""> Debit Note Date</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->invoice_date}}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group ">
-         <label for="">Aganist Invoice Date</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->due_date}}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-         <label for="">Aganist Invoice No</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->reference_no}}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-         <label for="">Payment Method</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->Payment->name}}</span>
-         </div>
-      </div>
-   </div>
-   <div class="col-md-4">
-      <div class="form-group @if($errors->has('due_date')) text-danger @endif">
-         <label for="">Return Notes</label>
-         <div>
-            <span class="hidden-xs">{{ $sales->notes}}</span>
-         </div>
-      </div>
-   </div>
-</div>
-<div class="row">
-   <div class="col-12">
-      <div class="card">
-         <div class="card-body">
-            <table class="table table-striped table-hover">
-               <thead>
-                  <tr>
-                     <th>Item Name</th>
-                     <th>Qty</th>
-                     <th>Rate</th>
-                     <th>GST Tax</th>
-                     <th>Cess Tax</th>
-                     <th>Amount</th>
-                     <th>Taxable Amount</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  @foreach ($sales_item as  $item)
-                  <tr >
-                     <td>{{ $item->item_name }}</td>
-                     <td>{{ $item->quantity }}</td>
-                     <td>{{ number_format($item->item_price, 2) }}</td>
-                     <td>{{ $item->ProductTax->group_type_name}}</td>
-                     <td>{{ $item->CessProductTax->group_type_name }}</td>
-                     <td>{{ number_format($item->total_amount, 2) }}</td>
-                     <td>{{ number_format($item->taxable_amount, 2) }}</td>
-                  </tr>
-                  @endforeach
-                  <tr>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td>Sub Total</td>
-                     <td>{{ number_format($sub_total->total_amount,2) }}</td>
-                  </tr>
-                  @foreach ($gst as $element)
-                  <tr>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td>{{ $element->item_name }} </td>
-                     <td>{{number_format($element->total_amount,2)}}</td>
-                  </tr>
-                  @endforeach
-                  @foreach ($cess as $i)
-                  <tr>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td>{{ $i->item_name }}  </td>
-                     <td>{{number_format($i->total_amount,2)}}</td>
-                  </tr>
-                  @endforeach
-                  <tr>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td>Round Off</td>
-                     <td>{{ number_format($roundoff->total_amount,2) }}</td>
-                  </tr>
-                  <tr>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td>Total Amount</td>
-                     <td>{{ number_format($sales->total_amount,2) }}</td>
-                  </tr>
-               </tbody>
-            </table>
-            <a href="/purchase-return-invoice/print/{{$sales->id}}" class="btn btn-outline-primary btn-icon-text float-right ml-2" target="_blank"> <i class="btn-icon-prepend" href="" data-feather="printer"></i>PRINT</a>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-   <div class="modal-dialog" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Delete</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body">
-            Are You Sure You Want to Delete
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            <a class="btn btn-danger" href="/{{$url}}/{{ $sales->id }}/delete">Delete</a>
-         </div>
-      </div>
-   </div>
-</div>
-<style>
-   .margin-right {
-   margin-left: 10px;
-   }
-</style>
-@stop
+@endsection

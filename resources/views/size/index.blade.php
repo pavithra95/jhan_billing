@@ -26,17 +26,15 @@
                         <tr>
                             <th>S.No</th>
                             <th>Name</th>
-                            <th>Sub Category</th>
                             <th>Action</th>
                            
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($types as $key => $item)
+                        @foreach ($sizes as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td><a href="/sizes/{{ $item->id }}" >{{ $item->name }}</a></td>
-                            <td>{{ $item->sub->name }}</td>
                           
                              <td>
                               <a href="/size/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
@@ -52,7 +50,7 @@
                     </tbody>
                 </table>
 
-                 {{$types->links()}}
+                 {{$sizes->links()}}
 
 
 

@@ -8,9 +8,11 @@ use App\Models\ProductCategory;
 use App\Models\TaxGroup;
 use Illuminate\Http\Request;
 use App\Models\SalesInvoiceItem;
+use App\Models\Size;
 use App\Models\SubCategory;
 use App\Models\Type;
 use App\Models\Unit;
+use Carbon\Carbon;
 use DB;
 
 class ProductController extends Controller
@@ -83,10 +85,11 @@ class ProductController extends Controller
         $category = ProductCategory::all();
         $units = Unit::all();
         $brands = Brand::all();
+        $sizes = Size::all();
         $gst = TaxGroup::where('group_type',"GST-Tax")->where('group_state_type','within_state')->get();
         $igst = TaxGroup::where('group_type',"GST-Tax")->where('group_state_type','outside_state')->get();
         $cess = TaxGroup::where('group_type',"CESS-Tax")->get();
-        return view('products.create')->with(compact(['url','title','category','gst','cess','units','igst','brands']));
+        return view('products.create')->with(compact(['url','title','category','gst','cess','units','igst','brands','sizes']));
     }
 
     /**
@@ -101,6 +104,7 @@ class ProductController extends Controller
     
     $item = new Product();
     $item->name = $request->item_name;
+    $item->age = $request->age;
     $item->barcode = $request->barcode;
     $item->category_id = $request->category_id;
     $item->subcategory_id = $request->subcategory_id;
@@ -165,8 +169,9 @@ class ProductController extends Controller
         $subcategories = SubCategory::all();
         $types = Type::all();
          $brands = Brand::all();
+          $sizes = Size::all();
 
-        return view('products.edit')->with(compact(['url','title','category','units','product','subcategories','types','brands']));
+        return view('products.edit')->with(compact(['url','title','category','units','product','subcategories','types','brands','sizes']));
     }
 
     /**
@@ -181,6 +186,7 @@ class ProductController extends Controller
 
      $item = Product::find($id);
     $item->name = $request->item_name;
+    $item->age = $request->age;
     $item->barcode = $request->barcode;
     $item->category_id = $request->category_id;
     $item->subcategory_id = $request->subcategory_id;
@@ -188,7 +194,7 @@ class ProductController extends Controller
     $item->brand = $request->brand_id;
     $item->hsn_code = $request->hsn_code;
     $item->size = $request->size;
-    $item->quantity = $request->quantity;
+    $item->quantity = $request->quantity ?? 0;
 
 
     $item->mrp = $request->mrp ?? 0;
@@ -246,11 +252,20 @@ public function getItemById(Request $request)
 {
     $item = Product::find($request->id);
     if ($item) {
+        $today = Carbon::today();
+
+        // Check if discount is valid
+        $price = $item->sale_price;
+        if (($item->enable_discount == 'on') && !empty($item->discount_price) && !empty($item->discount_from) && !empty($item->discount_to)) {
+            if ($today->between(Carbon::parse($item->discount_from), Carbon::parse($item->discount_to))) {
+                $price = $item->discount_price;
+            }
+        }
         return response()->json([
             'id' => $item->id,
             'name' => $item->name,
             'barcode' => $item->barcode,
-            'price' => $item->sale_price,
+            'price' => $price,
         ]);
     }
     return response()->json(null);
@@ -268,6 +283,16 @@ public function getPurchaseItemById(Request $request)
     }
     return response()->json(null);
 }
+
+
+public function printMultiple(Request $request)
+{
+    $ids = explode(',', $request->get('ids'));
+    $products = Product::whereIn('id', $ids)->get();
+
+    return view('products.multi_labels', compact('products'));
+}
+
 
     
 }

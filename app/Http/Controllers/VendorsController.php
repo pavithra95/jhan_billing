@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
 use App\Models\GstStateMaster;
+use App\Models\SubCategory;
 
 class VendorsController extends Controller
 {
@@ -73,7 +74,8 @@ class VendorsController extends Controller
         $url = $this->redirectUrl;
         $title = "Create " . $this->add_text;
         $state = GstStateMaster::all();
-        return view('vendors.create')->with(compact(['url','title','state']));
+        $subCategory = SubCategory::all();
+        return view('vendors.create')->with(compact(['url','title','state','subCategory']));
     }
 
     /**
@@ -96,7 +98,7 @@ class VendorsController extends Controller
 
         $vendor = new Vendors();
     $vendor->name = $request->name;
-    $vendor->supplier_type = $request->supplier_type;
+    // $vendor->supplier_type = $request->supplier_type;
     $vendor->company_name = $request->company_name;
     $vendor->phone = $request->phone;
     $vendor->alt_phone = $request->alt_phone;
@@ -106,6 +108,8 @@ class VendorsController extends Controller
     $vendor->state_id = $request->gst_state_id;
     $vendor->gst_state_code = $gst_state_code;
     $vendor->status = 'active';
+
+    $vendor->supplier_type = json_encode($request->category_ids);
 
     $vendor->save();
 
@@ -140,7 +144,12 @@ class VendorsController extends Controller
         $url = $this->redirectUrl;
         $title = "Edit ". $this->add_text;
         $state = GstStateMaster::all();
-        return view('vendors.edit')->with(compact(['vendor', 'url','title','state']));
+        $subCategory = SubCategory::all();
+       $vendor->supplier_type = $vendor->supplier_type 
+        ? json_decode($vendor->supplier_type, true) 
+        : [];
+
+        return view('vendors.edit')->with(compact(['vendor', 'url','title','state','subCategory']));
     }
 
     /**
@@ -163,7 +172,8 @@ class VendorsController extends Controller
 
         $vendor = Vendors::find($id);
     $vendor->name = $request->name;
-    $vendor->supplier_type = $request->supplier_type;
+  $vendor->supplier_type = json_encode($request->category_ids);
+
     $vendor->company_name = $request->company_name;
     $vendor->phone = $request->phone;
     $vendor->alt_phone = $request->alt_phone;

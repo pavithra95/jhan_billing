@@ -170,7 +170,7 @@ document.getElementById('addRow').addEventListener('click', () => {
                 .then(res => res.json())
                 .then(data => {
                     if (data) {
-                        nameInput.value = data.name;
+                        nameInput.value = data.name ??'';
                     } else {
                         nameInput.value = '';
                     }

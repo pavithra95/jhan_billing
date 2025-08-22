@@ -184,6 +184,10 @@ class Product extends Model
      public function Unit()
      {
          return $this->hasOne(Unit::class,'id','unit_id' );
+     } 
+     public function Size()
+     {
+         return $this->hasOne(Size::class,'id','size');
      }
 
      

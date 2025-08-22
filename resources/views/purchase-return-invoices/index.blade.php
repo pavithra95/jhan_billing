@@ -80,7 +80,7 @@
                   <tr>
                      <td>{{ $key + 1 }}</td>
                      <td>
-                        <a href="/{{$url}}/{{ $item->id }}/edit">
+                        <a href="/{{$url}}/{{ $item->id }}">
                            {{$item->invoice_no}}
                      </td>
                      <td>{{$item->against_invoice_no}}</td>

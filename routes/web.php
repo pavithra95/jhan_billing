@@ -33,6 +33,7 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SizeController;
 use App\Models\PurchaseReturnInvoice;
 use App\Models\Customer;
 use App\Models\Product;
@@ -41,6 +42,7 @@ use App\Models\SalesInvoice;
 use App\Models\Vendor;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -88,6 +90,7 @@ Route::get('vendors/{id}/delete',[VendorsController::class,'destroy']);
 
 Route::resource('sales-invoices', SalesInvoiceController::class);
 Route::get('sales-invoices/{id}/delete',[SalesInvoiceController::class,'destroy']);
+Route::get('sales-invoice/print/{id}',[SalesInvoiceController::class,'print']);
 
 Route::get('purchase-invoices/{id}/show',[SalesInvoiceController::class,'show']);
 
@@ -132,6 +135,7 @@ Route::post('check-quantity',[SalesInvoiceController::class,'checkQuantity']);
 
 Route::resource('transactions', TransactionController::class);
 Route::resource('product-categories', ProductCategoryController::class);
+Route::get('product-categories/{id}/delete', [ProductCategoryController::class,'destroy']);
 Route::resource('units', UnitController::class);
 Route::get('units/{id}/delete', [UnitController::class,'destroy']);
 Route::resource('payment-methods', PaymentMethodController::class);
@@ -170,6 +174,7 @@ Route::get('hsn-report', [ReportController::class, 'hsnReport']);
 
 
 Route::resource('subcategories', SubCategoryController::class);
+Route::get('subcategories/{id}/delete', [SubCategoryController::class,'destroy']);
 
 Route::get('/get-subcategories/{id}', [App\Http\Controllers\ProductController::class, 'getSubcategoriesAndHsn']);
 Route::resource('customer-types', \App\Http\Controllers\CustomerTypeController::class);
@@ -184,6 +189,8 @@ Route::get('variations/{id}/delete', [VariationController::class, 'destroy']);
 
 Route::resource('brands', BrandController::class)->middleware('auth');
 Route::resource('types', TypeController::class)->middleware('auth');
+Route::get('types/{id}/delete', [TypeController::class,'destroy']);
+Route::get('brands/{id}/delete', [BrandController::class,'destroy']);
 
 
 Route::get('/get-customer-by-phone', function (Request $request) {
@@ -229,11 +236,20 @@ Route::get('/get-item-by-barcode', function (Request $request) {
     $item = Product::where('barcode', $barcode)->first();
 
     if ($item) {
+        $today = Carbon::today();
+
+        // Check if discount is valid
+        $price = $item->sale_price;
+        if (($item->enable_discount == 'on') && !empty($item->discount_price) && !empty($item->discount_from) && !empty($item->discount_to)) {
+            if ($today->between(Carbon::parse($item->discount_from), Carbon::parse($item->discount_to))) {
+                $price = $item->discount_price;
+            }
+        }
         return response()->json([
             'barcode' => $item->barcode,
             'id' => $item->id,
             'name' => $item->name,
-            'price' => $item->sale_price
+            'price' => $price
         ]);
     } else {
         return response()->json(null);
@@ -261,6 +277,9 @@ Route::get('/products/{product}/labels', function(\App\Models\Product $product){
     return view('products.labels', compact('product'));
 });
 
+Route::get('/products/labels/print', [ProductController::class, 'printMultiple'])
+     ->name('products.printMultiple'); 
+
 // routes/web.php
 Route::get('/get-product-types/{subcategory}', function ($subcategoryId) {
     return \App\Models\Type::where('subcategory_id', $subcategoryId)
@@ -280,3 +299,11 @@ Route::get('/get-purchase-item-by-id', [ProductController::class, 'getPurchaseIt
     // Cash Bill Number
     Route::get('cashbill-settings', [SettingController::class, 'cashbillNumberEdit']);
     Route::put('cashbill-settings/{id}', [SettingController::class, 'cashbillNumberUpdate']);
+
+Route::resource('size', SizeController::class);
+Route::get('size/{id}/delete',[SizeController::class,'destroy']);
+
+Route::get('/get-sales-invoice-items', [SalesReturnInvoiceController::class, 'getInvoiceItems']);
+// web.php
+Route::get('/get-purchase-items-by-invoice', [PurchaseReturnInvoiceController::class, 'getItemsByInvoice']);
+

@@ -73,6 +73,21 @@
 
                             </div>
                         </div>
+
+                         <div class="col-md-6">
+
+                     <div class="form-group @if($errors->has('categories')) text-danger @endif">
+                            <label for=""><b>Categories : </b></label>
+                            <span>
+                               @if(!empty($vendor->supplier_type_names))
+            {{ implode(', ', $vendor->supplier_type_names) }}
+        @else
+            N/A
+        @endif
+                            </span>
+                        </div>
+
+
                             <div class="col-md-6">
 
                         <div class="form-group @if($errors->has('city')) text-danger @endif">
@@ -89,7 +104,7 @@
 
                              <div class="form-group @if($errors->has('state')) text-danger @endif">
                                 <label for=""><b>State : </b></label>
-                                <span>{{$vendor->State->name}}</span>
+                                <span>{{$vendor->State->name ?? ''}}</span>
                             </div>
                         </div>
                         

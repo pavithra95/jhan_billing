@@ -99,7 +99,7 @@ class ProductCategoryController extends Controller
     {
         ProductCategory::find($id)->delete();
 
-        Product::where('category_id',$id)->delete();
+        // Product::where('category_id',$id)->delete();
 
         return redirect('/product-categories');
     }

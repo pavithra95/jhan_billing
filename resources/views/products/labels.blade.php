@@ -2,20 +2,42 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Labels - {{ $product->name }}</title>
+<title>Label - {{ $product->name }}</title>
 <style>
-  @page { size: auto; margin: 5mm; }
-  .sheet { display: grid; grid-template-columns: repeat(3, 40mm); gap: 4mm; }
-  .label {
-      width: 40mm; height: 28mm;
-      border: 1px dashed #ccc; padding: 2mm;
-      box-sizing: border-box; text-align: center;
-      display: flex; flex-direction: column; justify-content: center;
-      font-size: 10px; line-height: 1.1;
+  @page {
+      size: 40mm 28mm;   /* exact label size */
+      margin: 0;         /* no extra margin */
   }
-  .name { font-weight: 600; margin-bottom: 2mm; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .barcode { margin: 0 auto; }
-  @media print { .controls { display:none; } .label { border: 0; } }
+  body {
+      margin: 0;
+      padding: 0;
+  }
+  .label {
+      width: 40mm;
+      height: 28mm;
+      box-sizing: border-box;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 8px;         /* slightly smaller text */
+      line-height: 1.1;
+      overflow: hidden;
+  }
+  .name {
+      font-weight: 600;
+      margin-bottom: 1mm;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .barcode {
+      margin: 0 auto;
+  }
+  @media print {
+      .controls { display:none; }
+      .label { border: none; }
+  }
 </style>
 </head>
 <body>
@@ -23,19 +45,18 @@
   <button onclick="window.print()">Print</button>
 </div>
 
-<div class="sheet">
-  @for ($i = 0; $i < 2; $i++) {{-- 24 labels per sheet example --}}
-    <div class="label">
-      <div class="name">Jhan's Collections</div>
-      <div class="barcode">
-        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.4, 22) !!}
-      </div>
-      <div>{{ $product->barcode }}</div>
-       <div class="name">Product : {{ $product->name }}</div>
-       <div class="name">MRP : RS.{{ $product->mrp }}</div>
-       <div class="name">Sale Price : RS.{{ $product->sale_price }}</div>
-    </div>
-  @endfor
+<div class="label">
+  <div class="name">Jhan's Collections</div>
+  <div class="barcode">
+    {{-- Adjusted barcode size for 40×28mm --}}
+    {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 18) !!}
+  </div>
+  <div>{{ $product->barcode }}</div>
+  <div class="name">Product: {{ $product->name }}</div>
+  <div class="name">Size: {{ $product->Size->name ?? '' }}</div>
+  <div class="name">MRP: Rs. {{ $product->mrp }}</div>
+  <div class="name">Discount Price: Rs. {{ $product->sale_price }}</div>
 </div>
+
 </body>
 </html>

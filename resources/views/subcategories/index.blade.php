@@ -42,7 +42,7 @@
                                 <a href="{{ route('subcategories.edit', $item->id) }}"><i class="fa fa-edit text-primary"></i></a>
                                 
                                 @if(auth()->user()->privilege == "admin")
-                                <a href="{{ url('/subcategories/'.$item->id.'/delete') }}" onclick="return confirm('Are you sure?')">
+                                <a href="{{ url('/subcategories/'.$item->id.'/delete') }}">
                                     <i class="fa fa-trash text-danger ml-2"></i>
                                 </a>
                                 @endif

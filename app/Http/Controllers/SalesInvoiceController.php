@@ -170,49 +170,32 @@ class SalesInvoiceController extends Controller
      */
     public function show($id)
     {
-         $sales = salesInvoice::find($id);
-         $sales_item = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $invoice_items = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $cess = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','cess_tax')->get();
-         $gst = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','gst_tax')->get();
-        
-         $sub_total = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','sub_total')->first();
-         $roundoff = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','roundoff')->first();
-        
-         $customers = Customer::where('status','active')->get();;
-        $url = $this->redirectUrl;
-        $items = Product::all();
-        $title = "Show ". $this->add_text;
-        
-         return view('sales-invoices.show')->with(compact(['customers', 'url','title','sales','items','invoice_items','cess','gst','sales_item','sub_total','roundoff']));
+         $url = $this->redirectUrl;
+        $title = "Show " . $this->add_text;
+        $customers = Customer::all();
+       $products = Product::all();
+        // $items_out = Product::all();
+        $paymentMethods = PaymentMethod::all();
+        $customerTypes = CustomerType::all();
+        $invoice = SalesInvoice::find($id);
 
+        return view('sales-invoices.show')->with(compact(['customers', 'url','title','products','invoice','paymentMethods','customerTypes']));
+   
         // return view('sales-invoices.show')->with (compact(['sales','url','title']));
     } 
     public function print($id)
     {
-         $sales = salesInvoice::find($id);
-         $sales_item = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $invoice_items = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $cess = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','cess_tax')->get();
-         $gst = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','gst_tax')->get();
-        
-         $sub_total = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','sub_total')->first();
-         $roundoff = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','roundoff')->first();
+         $url = $this->redirectUrl;
+        $title = "Show " . $this->add_text;
+        $customers = Customer::all();
+       $products = Product::all();
+        // $items_out = Product::all();
+        $paymentMethods = PaymentMethod::all();
+        $customerTypes = CustomerType::all();
+        $invoice = SalesInvoice::find($id);
 
-          $total_qty = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->sum('quantity');
-          $total_amount = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->sum('total_amount');
-          $total_gst = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','gst_tax')->sum('total_amount');
-          $total_cess = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','cess_tax')->sum('total_amount');
-          $sub_total =  $total_amount - $total_gst - $total_cess;
-          $grand_total =  $sub_total + $total_gst + $total_cess - $roundoff->total_amount;
-        
-         $customers = Customer::where('status','active')->get();;
-        $url = $this->redirectUrl;
-        $items = Product::all();
-        $title = "Show ". $this->add_text;
-        
-         return view('sales-invoices.print')->with(compact(['customers', 'url','title','sales','items','invoice_items','cess','gst','sales_item','sub_total','roundoff','total_qty','total_amount','total_gst','total_cess','sub_total','grand_total']));
-
+        return view('sales-invoices.print')->with(compact(['customers', 'url','title','products','invoice','paymentMethods','customerTypes']));
+   
         // return view('sales-invoices.show')->with (compact(['sales','url','title']));
     }
 
@@ -224,31 +207,16 @@ class SalesInvoiceController extends Controller
      */
     public function edit($id)
     {
-        $sales = salesInvoice::find($id);
-        $invoice_items = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-        $tds = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','tds')->first();
-        $cesstax = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','cess_tax')->get();
-         $gstax = SalesInvoiceItem::where('invoice_id',$sales->id)->where('line_type','gst_tax')->get();
-         // dd($gst);
-         // foreach ($gst as $key => $i) {
-         //     dd($i->tax_group_id);
-         // }
-        
-         $sub_total = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','sub_total')->first();
-         $roundoff = SalesInvoiceItem::where('invoice_id',$id)->where('line_type','roundoff')->first();
-        $customers = Customer::where('status','active')->get();;
-        $url = $this->redirectUrl;
-       
-       $items = Product::where('gst_state','within_state')->where('status','active')->get();
-        $items_out = Product::where('igst_state','outside_state')->where('status','active')->where('status','active')->get();
-        $payment = PaymentMethod::all();
-        $taxes = TaxGroup::where('group_state_type','within_state')->where('group_type',"GST-Tax")->with('taxGroup')->get();
-        $taxes_out = TaxGroup::where('group_state_type','outside_state')->where('group_type',"GST-Tax")->with('taxGroup')->get();
-        $cess_taxes = TaxGroup::where('group_type',"CESS-Tax")->with('taxGroup')->get();
-        $cess_taxes_out = TaxGroup::where('group_type',"CESS-Tax")->with('taxGroup')->get();
-        $title = "Edit ". $this->add_text;
-        
-        return view('sales-invoices.edit')->with(compact(['customers', 'url','title','sales','items','invoice_items','tds','gstax','cesstax','items_out','payment','taxes','taxes_out','cess_taxes','cess_taxes_out']));
+         $url = $this->redirectUrl;
+        $title = "Edit " . $this->add_text;
+        $customers = Customer::all();
+       $products = Product::all();
+        // $items_out = Product::all();
+        $paymentMethods = PaymentMethod::all();
+        $customerTypes = CustomerType::all();
+        $invoice = SalesInvoice::find($id);
+
+        return view('sales-invoices.edit')->with(compact(['customers', 'url','title','products','invoice','paymentMethods','customerTypes']));
     }
 
     /**
@@ -260,244 +228,81 @@ class SalesInvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($request->all());
-		//$myDateTime = DateTime::createFromFormat('d/m/Y', $request->due_date);
-		//$formatted_date = $myDateTime->format('Y-m-d');
-		
-        SalesInvoiceItem::where('invoice_id', $id)->delete();
-        $tax = SalesInvoiceItemTaxGroup::where('invoice_id',$id)->get();
-        foreach ($tax  as $key => $t) {
-            SalesInvoiceItemTaxGroupItem::where('parent_group_id',$t->id)->delete();
-
+        // dd($request->all());
+      
+    // Find existing invoice
+    $invoice = SalesInvoice::findOrFail($id);
+     $p = SalesInvoiceItem::where('sales_invoice_id', $id)->get();
+        foreach ($p as $key => $i) {
+            $product = Product::find($i->item_id);
+            $product->increment('quantity', $i->quantity);
+            $i->delete();
         }
-        SalesInvoiceItemTaxGroup::where('invoice_id', $id)->delete();
 
-       
+    // Update customer or create new
+    $customer = Customer::firstOrCreate(
+        ['phone' => $request->customer_phone],
+        [
+            'name' => $request->customer_name,
+            'customer_type' => $request->customer_type,
+            'count' => 0
+        ]
+    );
+    // $customer->increment('count');
 
+    // Calculate totals
+    $subTotal = 0;
+    $items = [];
 
-        $invoice = SalesInvoice::find($id);
-         $invoice->customer_id = $request->customer_id;
-       
-        $invoice->reference_no = $request->reference_no;
-        $invoice->invoice_date = $request->invoice_date;
-        $invoice->due_date = $request->due_date;
-        //$invoice->due_date = $formatted_date;
-         $invoice->total_amount = $request->final_amount;
-         $invoice->notes = $request->notes;
-         $invoice->payment_method_id = $request->payment_method_id;
-         $invoice->pay_status = "pending";
-         
-        $invoice->save();
+   foreach ($request->input('products', []) as $item) {
+        $amount = $item['qty'] * $item['rate'];
+        $subTotal += $amount;
 
-		
-
-
-        foreach ($request->item_id as $key => $item_id) {
-
-            $old_item = Product::find($item_id);
-
-              $customer = Customer::find($invoice->customer_id);
-
-           
-
-
-            $tax = TaxGroup::find($request->gst_group_id[$key]);
-            $cess_tax = TaxGroup::find($request->cess_group_id[$key]);
-
-
-           
-
-              $item = new SalesInvoiceItem();
-            
-
-            
-            $item->item_id = $item_id;
-            $item->invoice_id = $invoice->id;
-            $item->item_name = $old_item->name;
-            $item->quantity = $request->quantity[$key];
-            $item->tax_group_id = $request->gst_group_id[$key];
-            
-            $item->gst_rate = $tax->taxGroupPercent() ;
-            $item->cess_rate = $cess_tax->taxGroupPercent();
-           
-            $item->price_without_tax = $request->price_without_tax[$key];
-            $item->taxable_amount = $request->price_without_tax[$key] * $request->quantity[$key];
-             $item->taxable_amount = $request->price_without_tax[$key] * $request->quantity[$key];
-           
-          
-            if ($customer->state_id != "27") {
-                $item->igst_total_amount = $request->total_igst_amount[$key];
-                 $item->gst_total_amount = 0;
-                   $item->cess_total_amount = $request->total_cess_amount[$key];
-            }else{
-                 $item->igst_total_amount = 0;
-                  $item->gst_total_amount = $request->total_gst_amount[$key];
-                  $item->cess_total_amount = $request->total_cess_amount[$key];
-            }
-            
-            $item->cess_tax_group_id = $request->cess_group_id[$key];
-
-            $item->item_price = $request->price[$key];
-            $item->total_amount = $request->total_amount[$key];
-        // 
-           
-            $item->line_type = 'item';
-     
-             
-            $item->save();
-
-            $item_quantity = Product::find($item_id);
-            // $qty = $item_quantity->quantity + $request->quantity[$key];
-            $qty = $item_quantity->stockQuantity();
-            $item_quantity->quantity = $qty;
-            $item_quantity->save();
-
-             $taxg =  json_decode($request->iitem[$key]);
-
-            // dd($taxg->group_type_name);
-
-            // foreach ($request->gst_group_name as $key => $tax_name) {
-                # code...
-            $tax = new SalesInvoiceItemTaxGroup();
-            $tax->invoice_id = $invoice->id;
-            $tax->item_id = $item->id;
-            $tax->name = $taxg->group_type_name->g_name;
-            $tax->group_id = $taxg->group_type_name->id;
-            $tax->type = 'gst';
-            $tax->save();
-
-                foreach ($taxg->group_type_name->items as $kk => $value) {
-                    
-            $i = new SalesInvoiceItemTaxGroupItem();
-            $i->parent_group_id = $tax->id;
-            $i->tax_item_id = $value->id;
-            $i->name = $value->name;
-            $i->percentage = $value->percent;
-            $i->save();
-                }
-
-
-            $tax = new SalesInvoiceItemTaxGroup();
-            $tax->invoice_id = $invoice->id;
-            $tax->item_id = $item->id;
-            $tax->name = $taxg->cess_group_type_name->c_name;
-            $tax->group_id = $taxg->cess_group_type_name->id;
-            $tax->type = 'cess';
-            $tax->save();
-
-                foreach ($taxg->cess_group_type_name->items as $kk => $value) {
-                    
-            $i = new SalesInvoiceItemTaxGroupItem();
-            $i->parent_group_id = $tax->id;
-            $i->tax_item_id = $value->id;
-            $i->name = $value->name;
-            $i->percentage = $value->percent;
-            $i->save();
-                }
-
-            // }
-
-           
-
-           
-        }
-            $item = new SalesInvoiceItem();
-            $item->item_id = 0;
-            $item->invoice_id = $invoice->id;
-            $item->item_name = 'Sub Total';
-            $item->tax_group_id = 0;
-            $item->cess_tax_group_id = 0;
-          
-            $item->quantity = 1;
-            $item->item_price = $request->sub_total;
-            $item->total_amount = $request->sub_total;
-            $item->line_type = 'sub_total';
-            $item->save();
-             
-            if ($request->gst_amount > 0) {
-            foreach ($request->gst_id as $key => $g_id) {
-            $item = new SalesInvoiceItem();
-            $item->item_id = $item_id;
-            $item->invoice_id = $invoice->id;
-            $item->item_name = $request->gst_name[$key];
-           
-            $item->quantity = $request->gst_percentage[$key];
-             $item->tax_group_id = $request->gst_id[$key];
-            $item->cess_tax_group_id = 0;
-            $item->item_price = $request->gst_amount[$key];
-            $item->total_amount = $request->gst_amount[$key];
-
-            $item->line_type = 'gst_tax';
-            $item->save();
-        }
+        $items[] = new SalesInvoiceItem([
+            'item_id' => $item['id'],
+            'barcode' => $item['barcode'],
+            'quantity' => $item['qty'],
+            'rate' => $item['rate'],
+            'amount' => $amount
+        ]);
     }
-        if ($request->cess_amount > 0) {
-            # code...
-            foreach ($request->cess_id as $key => $g_id) {
-            $item = new SalesInvoiceItem();
-            $item->item_id = $item_id;
-            $item->invoice_id = $invoice->id;
-            $item->item_name = $request->cess_name[$key];
-           
-            $item->quantity = $request->cess_percentage[$key];
-             $item->tax_group_id = 0;
-            $item->cess_tax_group_id = $request->cess_id[$key];
-            $item->item_price = $request->cess_amount[$key];
-            $item->total_amount = $request->cess_amount[$key];
 
-            $item->line_type = 'cess_tax';
-            $item->save();
-        }
-        }
+    $gstAmount = $request->customer_type === 'Whole Sale' ? $subTotal * 0.05 : 0;
+    $totalAmount = $subTotal + $gstAmount;
 
-            $item = new SalesInvoiceItem();
-            $item->item_id = 0;
-          $item->invoice_id = $invoice->id;
-            $item->item_name = 'Roundoff';
+    // Update invoice fields
+    $invoice->invoice_no = $request->invoice_no;
+    $invoice->invoice_date = $request->invoice_date;
+    $invoice->customer_phone = $request->customer_phone;
+    $invoice->customer_name = $request->customer_name;
+    $invoice->customer_type = $request->customer_type;
+    $invoice->payment_method_id = $request->payment_method;
+    $invoice->customer_id = $customer->id;
+    $invoice->sub_total = $subTotal;
+    $invoice->gst_amount = $gstAmount;
+    $invoice->total_amount = $totalAmount;
+    $invoice->save();
 
-             $item->tax_group_id = 0;
-            $item->cess_tax_group_id = 0;
-           
-            $item->quantity = 1;
-            $item->item_price = $request->roundoff;
-            $item->total_amount = $request->roundoff;
-            $item->line_type = 'roundoff';
-            $item->save();
+    // ---- Handle Items ----
+    // Restore stock first (before removing old items)
+    foreach ($invoice->SaleItem as $oldItem) {
+        Product::where('id', $oldItem->item_id)->increment('quantity', $oldItem->quantity);
+    }
 
-           
+    // Delete old items
+    
 
-            $transaction = new Transaction;
-            $transaction->date = date('Y-m-d H:i:s');
-            $transaction->table_name = "sales_invoices";
-            $transaction->row_id = $invoice->id;
-            $transaction->amount = $request->final_amount;
-            $transaction->save();
+    // Save new items & update stock
+    $invoice->SaleItem()->saveMany($items);
 
-            $transaction_item = new TransactionItem;
-            $transaction_item->transaction_id = $transaction->id;
-            $transaction_item->account_id = 1;
-            $transaction_item->amount = $request->final_amount;
-            
-            $transaction_item->type = "debit";
-            $transaction_item->description = "";
-            $transaction_item->status = "active";
-            $transaction_item->save();
-          
-            return redirect('/sales-invoices/'. $invoice->id);
-            
-        
-           }
+    foreach ($items as $item) {
+        Product::where('id', $item->item_id)->decrement('quantity', $item->quantity);
+    }
 
+    return redirect()->route('sales-invoices.index')->with('success', 'Invoice updated successfully.');
+}
 
-
- 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\SalesInvoice  $salesInvoice
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
 

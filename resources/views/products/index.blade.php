@@ -87,9 +87,11 @@
         <table id="example" class="table table-hover table-light" style="width:100%">
                <thead class="thead-dark">
                         <tr>
+                          <th><input type="checkbox" id="select-all"></th>
                             <th>S.No</th>
                             <th>Product</th>
                             <th>Category</th>
+                            <th>Size</th>
                           
                             <th>Hsn Code</th>
                            
@@ -105,10 +107,13 @@
                     <tbody>
                         @foreach ($items as $key => $item)
                         <tr>
+                          <td>
+   <input type="checkbox" class="product-checkbox" value="{{ $item->id }}">
+</td>
                             <td>{{ $key + 1 }}</td>
                             <td><a href="/{{$url}}/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
                             <td>{{ $item->Category->name ??'' }}</td>
-                         
+                            <td>{{ $item->Size->name ??'' }}</td>
                             <td>{{ $item->hsn_code }}</td>
                           
                             <td>{{ $item->quantity }}</td>
@@ -136,6 +141,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <button id="print-selected" class="btn btn-success">
+    <i class="fas fa-barcode"></i> Print Selected Labels
+</button>
 
                  {{$items->links()}}
 
@@ -191,6 +199,33 @@
         });
     })
   })
+
+$(document).ready(function() {
+
+    // Select All
+    $('#select-all').on('click', function() {
+        $('.product-checkbox').prop('checked', this.checked);
+    });
+
+    // Print Selected
+    $('#print-selected').on('click', function() {
+        let ids = [];
+        $('.product-checkbox:checked').each(function() {
+            ids.push($(this).val());
+        });
+
+        if(ids.length === 0){
+            alert("Please select at least one product.");
+            return;
+        }
+
+        // open new window with selected IDs
+        window.open('/products/labels/print?ids=' + ids.join(','), '_blank');
+    });
+
+});
+
+
 </script>
 
 @stop

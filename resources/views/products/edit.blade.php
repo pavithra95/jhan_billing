@@ -24,6 +24,13 @@
                                 @if($errors->has('item_name'))
                                     <div class="error text-danger">{{ $errors->first('item_name') }}</div>
                                 @endif
+                            </div> 
+                            <div class="form-group @if($errors->has('age')) text-danger @endif">
+                                <label for="">Age</label>
+                                <input type="text" name="age" class="form-control" value="{{ old('age', $product->age) }}" required>
+                                @if($errors->has('age'))
+                                    <div class="error text-danger">{{ $errors->first('age') }}</div>
+                                @endif
                             </div>
 
                             <div class="form-group @if($errors->has('category_id')) text-danger @endif">
@@ -111,13 +118,10 @@
                                 <label for="">Size</label>
                                 <select name="size" class="form-control">
                                     <option value="">-- Select Size --</option>
-                                    <option value="XS" {{ $product->size == 'XS' ? 'selected' : '' }}>XS</option>
-                                    <option value="S" {{ $product->size == 'S' ? 'selected' : '' }}>S</option>
-                                    <option value="M" {{ $product->size == 'M' ? 'selected' : '' }}>M</option>
-                                    <option value="L" {{ $product->size == 'L' ? 'selected' : '' }}>L</option>
-                                    <option value="XL" {{ $product->size == 'XL' ? 'selected' : '' }}>XL</option>
-                                    <option value="XXL" {{ $product->size == 'XXL' ? 'selected' : '' }}>XXL</option>
-                                    <option value="XXXL" {{ $product->size == 'XXXL' ? 'selected' : '' }}>XXXL</option>
+                                    @foreach($sizes as $size)
+    
+                                    <option value="{{ $size->id }}" {{ $product->size == $size->id ? 'selected' : '' }}>{{ $size->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 

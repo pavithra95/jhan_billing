@@ -17,11 +17,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label>Supplier Type *</label>
-                            <select name="supplier_type" class="form-control" required>
+                            <label>Category </label>
+                            <select name="category_ids[]" class="form-control select2" multiple>
                                 <option value="">Select</option>
-                                <option value="Individual">Individual</option>
-                                <option value="Business">Business</option>
+                                @foreach($subCategory as $sub)
+                                    <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -84,13 +85,22 @@
 @endsection
 
 @section('js')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (must be before Select2 JS) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 <script>
 function isNumber(evt) {
     evt = evt || window.event;
     var charCode = evt.which || evt.keyCode;
     return !(charCode > 31 && (charCode < 48 || charCode > 57));
 }
-
 $(document).ready(function () {
     $('.select2').select2({ theme: 'bootstrap4' });
 
@@ -99,5 +109,14 @@ $(document).ready(function () {
         $('#gst_state_code').val(code || '');
     });
 });
+
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Select Category",
+        allowClear: true
+    });
+});
+
+
 </script>
 @endsection

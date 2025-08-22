@@ -17,14 +17,19 @@
                             <input type="text" name="name" class="form-control" value="{{ $vendor->name }}" required>
                         </div>
 
-                        <div class="col-md-6">
-                            <label>Supplier Type *</label>
-                            <select name="supplier_type" class="form-control" required>
-                                <option value="">Select</option>
-                                <option value="Individual" {{ $vendor->supplier_type == 'Individual' ? 'selected' : '' }}>Individual</option>
-                                <option value="Business" {{ $vendor->supplier_type == 'Business' ? 'selected' : '' }}>Business</option>
-                            </select>
-                        </div>
+                       <div class="col-md-6">
+    <label>Supplier Type *</label>
+    <select name="category_ids[]" class="form-control select2" multiple>
+        @foreach($subCategory as $sub)
+            <option value="{{ $sub->id }}" 
+                {{ in_array($sub->id, $vendor->supplier_type ?? []) ? 'selected' : '' }}>
+                {{ $sub->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
 
                         <div class="col-md-6">
                             <label>Company Name</label>
@@ -88,6 +93,15 @@
 @endsection
 
 @section('js')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (must be before Select2 JS) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 <script>
 function isNumber(evt) {
     evt = evt || window.event;
@@ -103,5 +117,12 @@ $(document).ready(function () {
         $('#gst_state_code').val(code || '');
     });
 });
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Select Category",
+        allowClear: true
+    });
+});
+
 </script>
 @endsection
