@@ -42,7 +42,7 @@
                             </div> 
                             <div class="form-group @if($errors->has('hsn_code')) text-danger @endif">
                                 <label for=""> Hsn Code</label>
-                                <input type="text" name="hsn_code" class="form-control" value="" required="required">
+                                <input type="text" name="hsn_code" class="form-control" value="">
                                 @if($errors->has('hsn_code'))
                                     <div class="error text-danger">{{ $errors->first('hsn_code') }}</div>
                                 @endif

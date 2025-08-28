@@ -162,21 +162,13 @@ class SalesReturnInvoiceController extends Controller
      */
     public function show($id)
     {
-         $sales = salesreturnInvoice::find($id);
-         $sales_item = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $invoice_items = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','item')->get();
-         $cess = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','cess_tax')->get();
-         $gst = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','gst_tax')->get();
-        
-         $sub_total = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','sub_total')->first();
-         $roundoff = SalesReturnInvoiceItem::where('invoice_id',$id)->where('line_type','roundoff')->first();
-        
-         $customers = Customer::where('status','active')->get();;
-        $url = $this->redirectUrl;
+         $url = $this->redirectUrl;
+        $title = "Show " . $this->add_text;
+        $customers = Customer::all();
         $items = Product::all();
-        $title = "Show ". $this->add_text;
-        
-         return view('sales-return-invoices.show')->with(compact(['customers', 'url','title','sales','items','invoice_items','cess','gst','sales_item','sub_total','roundoff']));
+        $paymentMethods = PaymentMethod::all();
+        $invoice = SalesReturnInvoice::find($id);
+        return view('sales-return-invoices.show')->with(compact(['url','title','customers','items','paymentMethods','invoice']));
 
         // return view('sales-invoices.show')->with (compact(['sales','url','title']));
     } 

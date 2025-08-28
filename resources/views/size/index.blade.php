@@ -34,7 +34,7 @@
                         @foreach ($sizes as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td><a href="/sizes/{{ $item->id }}" >{{ $item->name }}</a></td>
+                            <td><a href="/size/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
                           
                              <td>
                               <a href="/size/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>

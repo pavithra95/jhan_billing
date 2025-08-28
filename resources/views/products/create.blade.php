@@ -36,7 +36,7 @@
                             </div> 
                             <div class="form-group @if($errors->has('age')) text-danger @endif">
                                 <label for=""> Age</label>
-                                <input type="text" name="age" class="form-control" value="" required="required">
+                                <input type="text" name="age" class="form-control" value="">
                                 @if($errors->has('age'))
                                     <div class="error text-danger">{{ $errors->first('age') }}</div>
                                 @endif
@@ -74,7 +74,7 @@
 
                              <div class="form-group @if($errors->has('hsn_code')) text-danger @endif">
                                 <label for="">HSN Code</label>
-                                <input type="text" name="hsn_code" class="form-control hsn_code" value="" required="required" min="0" id="hsn_code">
+                                <input type="text" name="hsn_code" class="form-control hsn_code" value="" id="hsn_code">
                                 @if($errors->has('hsn_code'))
                                     <div class="error text-danger">{{ $errors->first('hsn_code') }}</div>
                                 @endif
@@ -83,21 +83,10 @@
                            
 
 
-                    
-
-
-
-{{-- Purchase Unit --}}
-
-
-
-{{-- Milligram Option --}}
-
-
 
                              <div class="form-group">
                             <label for="">Sale Price</label>
-                            <input type="number" name="sale_price" class="form-control" min="0" step="0.01">
+                            <input type="number" name="sale_price" class="form-control" min="0" step="0.01" required>
                         </div>
                          <div class="form-group">
                             <label for="">Wholesale Price</label>
@@ -157,7 +146,7 @@
                             {{-- Pricing Fields --}}
                         <div class="form-group">
                             <label for="">MRP</label>
-                            <input type="number" name="mrp" class="form-control" min="0" step="0.01">
+                            <input type="number" name="mrp" class="form-control" min="0" step="0.01" required>
                         </div>
                        
                         <div class="form-group">

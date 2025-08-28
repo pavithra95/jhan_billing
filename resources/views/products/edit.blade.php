@@ -27,7 +27,7 @@
                             </div> 
                             <div class="form-group @if($errors->has('age')) text-danger @endif">
                                 <label for="">Age</label>
-                                <input type="text" name="age" class="form-control" value="{{ old('age', $product->age) }}" required>
+                                <input type="text" name="age" class="form-control" value="{{ old('age', $product->age) }}">
                                 @if($errors->has('age'))
                                     <div class="error text-danger">{{ $errors->first('age') }}</div>
                                 @endif
@@ -35,7 +35,7 @@
 
                             <div class="form-group @if($errors->has('category_id')) text-danger @endif">
                                 <label for="">Product Category</label>
-                                <select class="form-control select2" id="category_id" name="category_id" required>
+                                <select class="form-control select2" id="category_id" name="category_id">
                                     <option value="">-- Select Category --</option>
                                     @foreach ($category as $cat)
                                         <option value="{{ $cat->id }}" {{ $product->category_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -72,7 +72,7 @@
 
                             <div class="form-group @if($errors->has('hsn_code')) text-danger @endif">
                                 <label for="">HSN Code</label>
-                                <input type="text" name="hsn_code" class="form-control hsn_code" value="{{ old('hsn_code', $product->hsn_code) }}" required min="0" id="hsn_code">
+                                <input type="text" name="hsn_code" class="form-control hsn_code" value="{{ old('hsn_code', $product->hsn_code) }}"  id="hsn_code">
                                 @if($errors->has('hsn_code'))
                                     <div class="error text-danger">{{ $errors->first('hsn_code') }}</div>
                                 @endif

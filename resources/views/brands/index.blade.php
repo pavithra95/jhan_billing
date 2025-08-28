@@ -15,7 +15,7 @@
 
         <h4 class="m-0 text-dark col-md-6 float-left">All Sizes</h4>
 
-        <a class="btn btn-primary float-right btn-sm" href="/size/create">NEW </a>
+        <a class="btn btn-primary float-right btn-sm" href="/brands/create">NEW </a>
     </div>
 </div>
 <br>
@@ -34,12 +34,12 @@
                         @foreach ($brands as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td><a href="/sizes/{{ $item->id }}" >{{ $item->name }}</a></td>
-                          
+                            <td><a href="/brands/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
+
                              <td>
-                              <a href="/size/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
+                              <a href="/brands/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>
                                 @if(auth()->user()->privilege == "admin")
-                              <a href="/size/{{$item->id}}/delete"><i class="fa fa-trash" ></i></a>
+                              <a href="/brands/{{$item->id}}/delete"><i class="fa fa-trash" ></i></a>
                               @endif
                               
                             </td>

@@ -64,7 +64,7 @@
                     </td>
                     <td><input type="number" name="items[{{ $index }}][qty]" class="form-control qty" value="{{ $item->quantity }}" min="1"></td>
                     <td><input type="number" name="items[{{ $index }}][rate]" class="form-control rate" value="{{ $item->rate }}" min="0"></td>
-                    <td class="amount">{{ number_format($item->qty * $item->rate, 2) }}</td>
+                    <td class="amount">{{ number_format($item->quantity * $item->rate, 2) }}</td>
                     <td>
                         <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
                     </td>
@@ -100,133 +100,141 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const gstRow = document.getElementById('gstRow');
-    const phoneInput = document.getElementById('supplierPhone');
-    const nameInput = document.getElementById('supplierName');
+    // ✅ Master product options (prevent duplication issue)
+    const productOptions = `
+        <option value=""></option>
+        @foreach($items as $product)
+            <option value="{{ $product->id }}">{{ $product->name }}</option>
+        @endforeach
+    `;
 
-    function calculateTotals() {
-        let rows = document.querySelectorAll("#itemTable tbody tr");
-        let subTotal = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+        const gstRow = document.getElementById('gstRow');
+        const phoneInput = document.getElementById('supplierPhone');
+        const nameInput = document.getElementById('supplierName');
 
-        rows.forEach(row => {
-            let qty = parseFloat(row.querySelector(".qty").value) || 0;
-            let rate = parseFloat(row.querySelector(".rate").value) || 0;
-            let amount = qty * rate;
-            row.querySelector(".amount").textContent = amount.toFixed(2);
-            subTotal += amount;
+        function calculateTotals() {
+            let rows = document.querySelectorAll("#itemTable tbody tr");
+            let subTotal = 0;
+
+            rows.forEach(row => {
+                let qty = parseFloat(row.querySelector(".qty").value) || 0;
+                let rate = parseFloat(row.querySelector(".rate").value) || 0;
+                let amount = qty * rate;
+                row.querySelector(".amount").textContent = amount.toFixed(2);
+                subTotal += amount;
+            });
+
+            document.querySelector("#itemTable #subTotal").textContent = subTotal.toFixed(2);
+
+            let gst = subTotal * 0.05;
+            gstRow.style.display = '';
+            document.getElementById("gstAmount").textContent = gst.toFixed(2);
+            document.getElementById("totalAmount").textContent = (subTotal + gst).toFixed(2);
+        }
+
+        // Add new row
+        document.getElementById('addRow').addEventListener('click', () => {
+            let tbody = document.querySelector("#itemTable tbody");
+            let rowCount = tbody.querySelectorAll('tr').length;
+            let newRow = document.createElement('tr');
+
+            newRow.innerHTML = `
+                <td><input type="text" name="items[${rowCount}][barcode]" class="form-control barcode"></td>
+                <td>
+                    <select name="items[${rowCount}][id]" class="form-control itemName">
+                        ${productOptions}
+                    </select>
+                </td>
+                <td><input type="number" name="items[${rowCount}][qty]" class="form-control qty" value="1" min="1"></td>
+                <td><input type="number" name="items[${rowCount}][rate]" class="form-control rate" value="0" min="0"></td>
+                <td class="amount">0.00</td>
+                <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+            `;
+            
+            tbody.appendChild(newRow);
+            calculateTotals();
         });
 
-        document.querySelector("#itemTable #subTotal").textContent = subTotal.toFixed(2);
+        // Table event listeners (barcode/item/qty/rate)
+        document.querySelector('#itemTable').addEventListener('change', e => {
+            const row = e.target.closest('tr');
+            if (e.target.classList.contains('barcode')) {
+                const barcode = e.target.value.trim();
+                if (barcode) {
+                    fetch(`/get-purchase-item-by-barcode?barcode=${encodeURIComponent(barcode)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data) {
+                                row.querySelector('.itemName').value = data.id;
+                                row.querySelector('.rate').value = data.price;
+                            } else {
+                                row.querySelector('.itemName').value = '';
+                                row.querySelector('.rate').value = '';
+                            }
+                            calculateTotals();
+                        });
+                }
+            }
 
-        let gst = subTotal * 0.05;
-        document.querySelector("#itemTable #gstRow").style.display = '';
-        document.querySelector("#itemTable #gstAmount").textContent = gst.toFixed(2);
-        document.querySelector("#itemTable #totalAmount").textContent = (subTotal + gst).toFixed(2);
-    }
+            if (e.target.classList.contains('itemName')) {
+                const productId = e.target.value;
+                if (productId) {
+                    fetch(`/get-purchase-item-by-id?id=${encodeURIComponent(productId)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data) {
+                                row.querySelector('.barcode').value = data.barcode;
+                                row.querySelector('.rate').value = data.price;
+                            } else {
+                                row.querySelector('.barcode').value = '';
+                                row.querySelector('.rate').value = '';
+                            }
+                            calculateTotals();
+                        });
+                } else {
+                    row.querySelector('.barcode').value = '';
+                    row.querySelector('.rate').value = '';
+                    calculateTotals();
+                }
+            }
+        });
 
-    // Add new row
-    document.getElementById('addRow').addEventListener('click', () => {
-        let tbody = document.querySelector("#itemTable tbody");
-        let rowCount = tbody.querySelectorAll('tr').length;
-        let newRow = document.createElement('tr');
+        document.querySelector('#itemTable').addEventListener('input', e => {
+            if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
+                calculateTotals();
+            }
+        });
 
-        newRow.innerHTML = `
-            <td><input type="text" name="items[${rowCount}][barcode]" class="form-control barcode"></td>
-            <td>
-                <select name="items[${rowCount}][id]" class="form-control itemName">
-                    ${[...document.querySelectorAll('#itemTable .itemName option')].map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
-                </select>
-            </td>
-            <td><input type="number" name="items[${rowCount}][qty]" class="form-control qty" value="1" min="1"></td>
-            <td><input type="number" name="items[${rowCount}][rate]" class="form-control rate" value="0" min="0"></td>
-            <td class="amount">0.00</td>
-            <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
-        `;
-        
-        tbody.appendChild(newRow);
+        // Remove row
+        document.querySelector("#itemTable tbody").addEventListener('click', e => {
+            if (e.target.classList.contains('removeRow')) {
+                let row = e.target.closest('tr');
+                let allRows = document.querySelectorAll("#itemTable tbody tr");
+                if (allRows.length > 1) {
+                    row.remove();
+                    calculateTotals();
+                } else {
+                    alert("Can't remove the last row");
+                }
+            }
+        });
+
+        // Supplier lookup
+        phoneInput.addEventListener('input', () => {
+            let phone = phoneInput.value.trim();
+            if (phone.length >= 5) {
+                fetch(`/get-vendor-by-phone?phone=${encodeURIComponent(phone)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        nameInput.value = data?.name ?? '';
+                    });
+            } else {
+                nameInput.value = '';
+            }
+        });
+
         calculateTotals();
     });
-
-    // Table event listeners (barcode/item/qty/rate)
-    document.querySelector('#itemTable').addEventListener('change', e => {
-        const row = e.target.closest('tr');
-        if (e.target.classList.contains('barcode')) {
-            const barcode = e.target.value.trim();
-            if (barcode) {
-                fetch(`/get-purchase-item-by-barcode?barcode=${encodeURIComponent(barcode)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data) {
-                            row.querySelector('.itemName').value = data.id;
-                            row.querySelector('.rate').value = data.price;
-                        } else {
-                            row.querySelector('.itemName').value = '';
-                            row.querySelector('.rate').value = '';
-                        }
-                        calculateTotals();
-                    });
-            }
-        }
-
-        if (e.target.classList.contains('itemName')) {
-            const productId = e.target.value;
-            if (productId) {
-                fetch(`/get-purchase-item-by-id?id=${encodeURIComponent(productId)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data) {
-                            row.querySelector('.barcode').value = data.barcode;
-                            row.querySelector('.rate').value = data.price;
-                        } else {
-                            row.querySelector('.barcode').value = '';
-                            row.querySelector('.rate').value = '';
-                        }
-                        calculateTotals();
-                    });
-            } else {
-                row.querySelector('.barcode').value = '';
-                row.querySelector('.rate').value = '';
-                calculateTotals();
-            }
-        }
-    });
-
-    document.querySelector('#itemTable').addEventListener('input', e => {
-        if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
-            calculateTotals();
-        }
-    });
-
-    // Remove row
-    document.querySelector("#itemTable tbody").addEventListener('click', e => {
-        if (e.target.classList.contains('removeRow')) {
-            let row = e.target.closest('tr');
-            let allRows = document.querySelectorAll("#itemTable tbody tr");
-            if (allRows.length > 1) {
-                row.remove();
-                calculateTotals();
-            } else {
-                alert("Can't remove the last row");
-            }
-        }
-    });
-
-    // Supplier lookup
-    phoneInput.addEventListener('input', () => {
-        let phone = phoneInput.value.trim();
-        if (phone.length >= 5) {
-            fetch(`/get-vendor-by-phone?phone=${encodeURIComponent(phone)}`)
-                .then(res => res.json())
-                .then(data => {
-                    nameInput.value = data?.name ?? '';
-                });
-        } else {
-            nameInput.value = '';
-        }
-    });
-
-    calculateTotals();
-});
 </script>
 @endsection

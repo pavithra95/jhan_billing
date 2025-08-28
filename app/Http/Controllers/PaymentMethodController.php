@@ -38,7 +38,7 @@ class PaymentMethodController extends Controller
     {
         $unit = new PaymentMethod();
         $unit->name = $request->name;
-        $unit->description = $request->description;
+        $unit->description = $request->description ?? '';
         $unit->status = $request->status;
         $unit->save();
 
@@ -81,7 +81,7 @@ class PaymentMethodController extends Controller
     {
         $unit = PaymentMethod::find($id);
         $unit->name = $request->name;
-        $unit->description = $request->description;
+        $unit->description =  $request->description ?? '';
         $unit->status = $request->status;
         $unit->save();
 

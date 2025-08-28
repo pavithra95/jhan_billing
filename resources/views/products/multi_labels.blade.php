@@ -4,92 +4,78 @@
 <meta charset="utf-8">
 <title>Labels</title>
 <style>
-  @page { size: 80mm 28mm; margin:0; }
+  @page { size: A4; margin: 0; }   /* printing on A4 with multiple labels */
   body { margin:0; padding:0; }
 
-  .page {
-      position: relative;
-      width: 80mm;
-      height: 28mm;
-      page-break-after: always;
+  .sheet {
+      display: flex;
+      flex-wrap: wrap;   /* flow horizontally across page */
+      width: 100%;
   }
 
   .label {
-      width: 40mm;
-      height: 28mm;
+      width: 40mm;      /* exact sticker size */
+      height: 28mm;     /* exact sticker size */
       box-sizing: border-box;
-      text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      font-size: 9px;
+      align-items: center;
+      font-size: 8px;   /* optimized for small size */
       line-height: 1.1;
+      padding: 1mm;
+      text-align: center;
       overflow: hidden;
-      position: absolute;
-      top: 0;
+      /* border: 1px dashed #ccc; */ /* use for testing only */
   }
 
-  .left  { left: 0mm; }
-  .right { left: 40mm; }
-
+  .brand {
+      font-weight: bold;
+      font-size: 8px;
+      margin-bottom: 1mm;
+  }
   .barcode {
-      margin: 0 auto;
+      margin: 0 auto 0.5mm auto;
   }
-
-  /* Print button container */
-  .controls {
-      margin: 15px 20px;
-      text-align: right;   /* align button to right */
+  .barcode-text {
+      font-size: 6px;
+      margin-bottom: 1mm;
   }
-
-  /* Print button style */
-  .btn {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-  }
-  .btn:hover {
-      background: #0056b3;
+  .details {
+      font-size: 6.5px;
+      line-height: 1.1;
+      text-align: center;
   }
 
   @media print {
       .controls { display:none; }
-      .label { border: none; }
+      .label { border:none; margin:0; }
   }
 </style>
 </head>
 <body>
 
-<div class="controls">
+<div class="controls" style="margin:10px; text-align:right;">
   <button onclick="window.print()" class="btn">Print</button>
 </div>
 
-@foreach ($products as $i => $product)
-    {{-- Start a new sheet every 2 labels --}}
-    @if($i % 2 == 0)
-        <div class="page">
-    @endif
-
-        <div class="label {{ $i % 2 == 0 ? 'left' : 'right' }}">
-            <div>Jhan's Collections</div>
-            <div class="barcode">
-                {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 18) !!}
-            </div>
-            <div>{{ $product->barcode }}</div>
-            <div>Product: {{ $product->name }}</div>
-            <div>Size: {{ $product->Size->name ?? '' }}</div>
-            <div>MRP: Rs.{{ $product->mrp }}</div>
-            <div>Discount Price: Rs.{{ $product->sale_price }}</div>
+<div class="sheet">
+@foreach ($products as $product)
+    <div class="label">
+        <div class="brand">Jhan's Collections</div>
+        <div class="barcode">
+            {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 14) !!}
         </div>
-
-    @if($i % 2 == 1 || $loop->last)
+        <div class="barcode-text">{{ $product->barcode }}</div>
+        <div class="details">
+            Product: {{ $product->name }}<br>
+            Size: {{ $product->Size->name ?? '' }}<br>
+            MRP: Rs. {{ $product->mrp }}<br>
+            Discount: Rs. {{ $product->sale_price }}
         </div>
-    @endif
+    </div>
 @endforeach
+</div>
 
 </body>
 </html>

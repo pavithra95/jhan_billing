@@ -2,60 +2,120 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Label - {{ $product->name }}</title>
+<title>Horizontal Label</title>
 <style>
-  @page {
-      size: 40mm 28mm;   /* exact label size */
-      margin: 0;         /* no extra margin */
-  }
-  body {
-      margin: 0;
-      padding: 0;
-  }
-  .label {
-      width: 40mm;
-      height: 28mm;
+    @page { size: 100mm 25mm; margin: 0; }
+    *{
+      font-size: 10px;
+    }
+    body { margin:0; padding:0; font-size: 10px;}
+    
+    .page {
+    
+      width: 100mm;
+      height: 25mm;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); 
+      justify-items: center;
+        /* display: flex;
+       justify-content: flex-start;
+        align-items: center;  */
+
+    }
+    
+    .label {
+      
+      width: 50mm;   /* half width */
+      height: 25mm;  /* full height */
+      position: relative;
       box-sizing: border-box;
+      overflow: hidden; /* prevents spilling out */
+      border: .05px dashed grey;
+    }
+    
+    .inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50mm;
       text-align: center;
+      /* font-size: 7px;   reduced */
+      line-height: 1.1; /* tighter */
+    }
+    .inner1{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50mm;
+      text-align: center;
+      /* font-size: 7px;   reduced */
+      line-height: 1.1; /* tighter */
+    }
+    .barcode{
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      font-size: 8px;         /* slightly smaller text */
-      line-height: 1.1;
-      overflow: hidden;
-  }
-  .name {
-      font-weight: 600;
-      margin-bottom: 1mm;
+    }
+    
+    .brand { 
+      font-weight: bold; 
+      /* font-size: 8px;  */
+      margin-bottom: 0.5mm; 
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-  }
-  .barcode {
-      margin: 0 auto;
-  }
-  @media print {
-      .controls { display:none; }
-      .label { border: none; }
-  }
-</style>
+    }
+    
+   
+    
+    .details { 
+      /* border: 1px solid #000; */
+      /* font-size: 7px;  */
+      line-height: 1.1; 
+      /* margin-top: 0.2mm;  */
+      /* padding: 0.2mm; */
+      word-wrap: break-word;
+    }
+    .brand{
+      font-weight: bold;
+      font-size: 15px;
+    }
+    </style>
+    
 </head>
 <body>
-<div class="controls" style="margin-bottom:10px">
-  <button onclick="window.print()">Print</button>
-</div>
 
-<div class="label">
-  <div class="name">Jhan's Collections</div>
-  <div class="barcode">
-    {{-- Adjusted barcode size for 40×28mm --}}
-    {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 18) !!}
+<div class="page">
+  <!-- Left Label -->
+  <div class="label">
+    <div class="inner">
+      <div class="brand">Jhan's Collections</div>
+      <div class="barcode">
+        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.5, 20) !!} 
+      </div>
+      <div class="barcode-text">{{ $product->barcode }}</div>
+      <div class="details">
+        Product: {{ $product->name }}<br>
+        MRP: Rs. <s style="font-size: 15px;"> {{ $product->mrp }}</s><br>
+        Our Price:Rs.<b style="font-size: 15px;">{{ $product->sale_price }}</b>
+      </div>
+    </div>
   </div>
-  <div>{{ $product->barcode }}</div>
-  <div class="name">Product: {{ $product->name }}</div>
-  <div class="name">Size: {{ $product->Size->name ?? '' }}</div>
-  <div class="name">MRP: Rs. {{ $product->mrp }}</div>
-  <div class="name">Discount Price: Rs. {{ $product->sale_price }}</div>
+
+  <!-- Right Label -->
+  <div class="label">
+    <div class="inner">
+      <div class="brand">Jhan's Collections</div>
+      <div class="barcode">
+        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.5, 20) !!}
+      </div>
+      <div class="barcode-text">{{ $product->barcode }}</div>
+      <div class="details">
+        Product: {{ $product->name }}<br>
+        MRP: Rs. <s style="font-size: 15px;"> {{ $product->mrp }}</s><br>
+        Our Price:Rs.<b style="font-size: 15px;">{{ $product->sale_price }}</b>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>

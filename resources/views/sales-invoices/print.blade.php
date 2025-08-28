@@ -1,126 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Sales Invoice</title>
-	<link href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/assets/css/styles.css" rel="stylesheet">
-	<link href="/assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-	<style>
-		body, p, h1, h2, h3, h4, h5, h6 {
-			font-family: 'Calibri', sans-serif !important;
-			font-size: 15px;
-		}
-		.table-bordered {
-			border: 2px solid #0c0c0c;
-		}
-		.table-bordered>thead>tr>td, 
-		.table-bordered>thead>tr>th,
-		.table-bordered>tbody>tr>td {
-			border: 1px solid #0c0c0c;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @media print{
+            @page{
+                width: 80mm;
+                margin: 0;
+            }
+                body{
+            /* display: flex;
+            justify-content: center; */
+            /* align-items: center; */
+        }
+        .container{
+        /* width: 80mm; */
+        /* margin: 1px; */
+        
+        /* background-color: #333; */
+        /* color: white; */
+        /* border: 1px solid red; */
+            }
+        .logo{
+            text-align: center;
+            margin-top: 10px;
+        }
+       
+        .head1{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            margin-top: 10px;
+            border-bottom: 1px solid red;
+            padding-bottom: 10px;
+        }
+        .head2{
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid red;
+        }
+        .head3{
+            font-size: 10px;
+            margin-top: 10px;
+            border-bottom: 1px solid red;
+            display: flex;
+            justify-content: space-around;
+        }
+        table{
+            /* border: 1px solid red; */
+            width: 100%;
+            border-collapse: collapse;
+            
+        }
+        thead,th {
+            border: 1px solid red;
+            border-collapse: collapse;
+        }
+        tbody{
+            text-align: center;
+        }
+        tbody  td{
+            border: 1px solid red;
+            border-collapse: collapse;
+        }
+        .head4{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .foot1{
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        .foot2{
+            display: flex;
+            /* flex-direction: column; */
+            /* align-items: center; */
+            justify-content: center;
+            /* text-decoration: dashed underline; */
+        }
+        .foot2 {
+            /* text-decoration: underline dashed black 0.8px; */
+            border-bottom: 1px dashed red ;
+            width: 100vw;
+        }
+        h1{
+            color: crimson;
+        }
+            }
+        
+    </style>
 </head>
 <body onload="window.print()">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12">
+    <div class="container">
+        <div class="logo">
+            <!-- <img src="./JHAN’s.png" alt="logo" width="150px" style="backdrop-filter: inherit;"> -->
+            <!-- <h1 style="">JHAN's <br> <span style="font-weight: 200; font-size: 15px; color: black;">Collections</span></h1> -->
+             <span style="font-size: 30px; font-weight: 700;">JHAN's Collections</span> 
+        </div>
+        <div class="head1">
+        <div class="address">15 Thudiyalur Rd,<br> Vasantham Nagar,<br> Saravanampatti,<br>
+            Coimbatore-641035</div>
+        <div class="phone">Phone Number: 9874563210</div>
+        <div class="gst" style="font-weight: 500;">GSTIN NO: 33IESPS8823D1ZX</div>
+        </div>
+        <div class="head2">
+            <div class="bill">
+                <p>Bill No: {{$invoice->invoice_no}}</p>
+                <p>Customer: {{$invoice->customer_name}}</p>
+                <p>Mobile No: {{$invoice->customer_phone}}</p>
+            </div>
+            <div class="date">
+              <p>Date: {{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d-m-Y') }}</p>
 
-				{{-- Company + Customer Details --}}
-				<table class="table table-bordered">
-					<tr>
-						<td colspan="2">
-							<div class="col-xs-6">
-								<!-- <img src="/assets/images/srlogo.png" style="width:200px;"> -->
-								<p><strong>Jhan's Collections</strong></p>
-								<p><strong>GSTIN:</strong> 33IESPS8823D1ZX</p>
-								<p><strong>Address:</strong> 15, Thudiyalur Rd, Vasantham Nagar, Saravanampatti<br>
-								Coimbatore, Tamil Nadu 641035</p>       
-								<p><strong>Mobile:</strong> +91 73394 02937</p>
-								<p><strong>Email:</strong> srdistributors@gmail.com</p>
-							</div>
-							<div class="col-xs-6 text-right">
-								<h3 style="letter-spacing: 4px; font-weight: 600;">INVOICE</h3>
-								<p><strong>Invoice No:</strong> {{ $invoice->invoice_no }}</p>
-								<p><strong>Date:</strong> {{ $invoice->invoice_date }}</p>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div class="col-xs-7">
-								<h5><strong>BILLED TO:</strong></h5>
-								<p><b>Name:</b> {{ $invoice->customer->name ?? '-' }}</p>
-								<!-- <p><b>GSTIN:</b> {{ $invoice->customer->gst_no ?? '-' }}</p> -->
-								<!-- <p><b>Address:</b> {{ $invoice->customer->address ?? '-' }}</p> -->
-								<p><b>Phone:</b> {{ $invoice->customer->phone ?? '-' }}</p>
-							</div>
-						</td>
-					</tr>
-				</table>
-
-				{{-- Invoice Items --}}
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>S.No</th>
-							<th>Product</th>
-							<th>HSN Code</th>
-							<th>Qty</th>
-							<th>Rate</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach ($invoice->SaleItem as $key => $item)
-							<tr>
-								<td>{{ $key+1 }}</td>
-								<td>{{ $item->product->name ?? 'Deleted Product' }}</td>
-								<td>{{ $item->product->hsn_code ?? '-' }}</td>
-								<td>{{ $item->quantity }}</td>
-								<td>{{ number_format($item->rate,2) }}</td>
-								<td>{{ number_format($item->quantity * $item->rate,2) }}</td>
-							</tr>
-						@endforeach
-						<tr>
-							<td colspan="3"><strong>TOTAL</strong></td>
-							<td>{{ $invoice->SaleItem->sum('quantity') }}</td>
-							<td></td>
-							<td>{{ number_format($invoice->sub_total,2) }}</td>
-						</tr>
-					</tbody>
-				</table>
-
-				{{-- Totals --}}
-				<table class="table table-bordered">
-					<tr>
-						<td style="width:60%;">
-							<h5><b>Total Amount in Words:</b> {{ ucwords(getIndianCurrency($invoice->total_amount)) }}</h5>
-						</td>
-						<td style="width:40%; text-align:right;">
-							<p><b>Sub Total:</b> {{ number_format($invoice->sub_total,2) }}</p>
-							<p><b>GST:</b> {{ number_format($invoice->gst_amount,2) }}</p>
-							<p><b>Total:</b> {{ number_format($invoice->total_amount,2) }}</p>
-						</td>
-					</tr>
-				</table>
-
-				{{-- Footer --}}
-				<table class="table table-bordered">
-					<tr>
-						<td style="text-align:center;">
-							<p><b>Receiver Signature</b></p><br><br>
-						</td>
-						<td style="text-align:center;">
-							<p><b>For SR DISTRIBUTORS</b></p>
-							<br><br>
-							<p>Authorised Signatory</p>
-						</td>
-					</tr>
-				</table>
-
-			</div>
-		</div>
-	</div>
+                <!-- <p>Time: {{$invoice->created_at->format('h:i A')}}</p> -->
+            </div>
+        </div>
+        <div class="bill-table head3">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Item</th>
+                        <th>Rate</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($invoice->SaleItem as $key => $item)
+                    <tr>
+                    <tr>
+                        <td>{{ $item->barcode }}</td>
+                        <td>{{  $item->product->name }}</td>
+                        <td>{{ $item->rate }}</td>
+                        <td>{{  $item->quantity }}</td>
+                        <td>{{ $item->amount }}</td>
+                    </tr>
+                    @endforeach
+                   
+                </tbody>
+            </table>
+        </div>
+        <div class="head4">
+            <p> Sub Total: Rs. {{$invoice->sub_total}}</p>
+            <p> Gst : Rs. {{$invoice->gst_amount}}</p>
+            <p> Total: Rs. {{$invoice->total_amount}}</p>
+        </div>
+        <div class="foot1">
+            <h3>Receiver Signature</h3>
+            <h3>Authorized Signatory</h3>
+        </div>
+        <div class="foot2">
+            <h3>Thank You... Visit Again...</h3>
+            <p></p>
+        </div>
+    </div>
 </body>
 </html>

@@ -87,7 +87,7 @@
         <table id="example" class="table table-hover table-light" style="width:100%">
                <thead class="thead-dark">
                         <tr>
-                          <th><input type="checkbox" id="select-all"></th>
+                          <!-- <th><input type="checkbox" id="select-all"></th> -->
                             <th>S.No</th>
                             <th>Product</th>
                             <th>Category</th>
@@ -107,9 +107,9 @@
                     <tbody>
                         @foreach ($items as $key => $item)
                         <tr>
-                          <td>
+                          <!-- <td>
    <input type="checkbox" class="product-checkbox" value="{{ $item->id }}">
-</td>
+</td> -->
                             <td>{{ $key + 1 }}</td>
                             <td><a href="/{{$url}}/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
                             <td>{{ $item->Category->name ??'' }}</td>
@@ -142,7 +142,7 @@
                     </tbody>
                 </table>
                 <button id="print-selected" class="btn btn-success">
-    <i class="fas fa-barcode"></i> Print Selected Labels
+    <!-- <i class="fas fa-barcode"></i> Print Selected Labels -->
 </button>
 
                  {{$items->links()}}
