@@ -130,7 +130,7 @@ class ProductController extends Controller
     $item->status = $request->status ?? 'active';
     $item->save();
 
-    return redirect($this->redirectUrl);
+    return redirect('/products/'.$item->id.'/edit');
 }
 
 

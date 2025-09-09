@@ -307,18 +307,19 @@ class SalesInvoiceController extends Controller
     {
 
         $old_items = SalesInvoiceItem::where('sales_invoice_id', $id)->get(['item_id']);
+         $items = Product::whereIn('id', $old_items)->get();
+
+         foreach ($items as $key => $item) {
+            $qty = $item->salesQuantity();
+            $item->quantity += $qty;
+            $item->save();
+         }
 
         SalesInvoiceItem::where('sales_invoice_id', $id)->delete();
         salesInvoice::find($id)->delete();
        
 
-          $items = Product::whereIn('id', $old_items)->get();
-
-         foreach ($items as $key => $item) {
-            $qty = $item->stockQuantity();
-            $item->quantity = $qty;
-            $item->save();
-         }
+         
 
 
 

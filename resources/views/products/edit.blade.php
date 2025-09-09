@@ -184,8 +184,12 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary col-md-2 offset-md-5 btn-sm">Update</button>
+                    <button type="submit" class="btn btn-primary col-md-2 offset-md-3 btn-sm">Update</button>
                     <a class="btn btn-danger col-md-2 btn-sm" href='/products'>Cancel</a>
+                     <a href="{{ url('/products/' . $product->id . '/labels') }}" 
+   class="btn btn-sm col-md-2 btn-info" target="_blank">
+   Print Label
+</a>
                 </form>
             </div>
         </div>

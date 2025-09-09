@@ -114,7 +114,7 @@ class Product extends Model
 	 
 	 public function totalSaleQuantity()
      {
-         return $this->salesQuantity() + $this->cashQuantity() - $this->salesreturnQuantity();
+         return $this->salesQuantity() - $this->salesreturnQuantity();
      }
 
      public function cashstockQuantity()
@@ -188,6 +188,10 @@ class Product extends Model
      public function Size()
      {
          return $this->hasOne(Size::class,'id','size');
+     }
+     public function brandName()
+     {
+         return $this->hasOne(Brand::class,'id','brand');
      }
 
      

@@ -306,17 +306,18 @@ class SalesReturnInvoiceController extends Controller
         // first gives object
         // no matter how many rows will only return 1st row
         $old_items = SalesReturnInvoiceItem::where('invoice_id', $id)->get(['item_id']);
+         $items = Product::whereIn('id', $old_items)->get();
+
+         foreach ($items as $key => $item) {
+            $qty = $item->salesreturnQuantity();
+            $item->quantity = $qty;
+            $item->save();
+         }
 
         SalesReturnInvoiceItem::where('invoice_id', $id)->delete();
         salesreturnInvoice::find($id)->delete();
         
-          $items = Product::whereIn('id', $old_items)->get();
-
-         foreach ($items as $key => $item) {
-            $qty = $item->stockQuantity();
-            $item->quantity = $qty;
-            $item->save();
-         }
+         
 
 
 

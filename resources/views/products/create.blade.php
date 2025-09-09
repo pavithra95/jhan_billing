@@ -156,7 +156,7 @@
 
                         <div class="form-group">
                             <label for="">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" min="0">
+                            <input type="number" name="quantity" class="form-control" min="0" required>
                         </div>
                        
                     

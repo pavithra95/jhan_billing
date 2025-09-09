@@ -36,7 +36,7 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td><a href="/types/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
-                            <td>{{ $item->sub->name }}</td>
+                            <td>{{ $item->sub->name ?? '' }}</td>
                           
                              <td>
                               <a href="/types/{{$item->id}}/edit"><i class= "fa fa-edit"></i></a>

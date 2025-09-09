@@ -324,13 +324,10 @@ class PurchaseReturnInvoiceController extends Controller
     public function destroy($id)
     {
         $old_items = PurchaseReturnInvoiceItem::where('invoice_id', $id)->get(['item_id']);
-        PurchaseReturnInvoiceItem::where('invoice_id', $id)->delete();
-        PurchaseReturnInvoice::find($id)->delete();
-         
          $items = Product::whereIn('id', $old_items)->get();
 
          foreach ($items as $key => $item) {
-            $qty = $item->stockQuantity();
+            $qty = $item->purchasereturnQuantity();
 
              if($qty < 0){
                 $item->quantity =0;
@@ -341,6 +338,10 @@ class PurchaseReturnInvoiceController extends Controller
             
             $item->save();
          }
+        PurchaseReturnInvoiceItem::where('invoice_id', $id)->delete();
+        PurchaseReturnInvoice::find($id)->delete();
+         
+        
             // $qty = $item_quantity->quantity + $request->quantity[$key];
             
 

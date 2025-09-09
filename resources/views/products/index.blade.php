@@ -93,7 +93,8 @@
                             <th>Category</th>
                             <th>Size</th>
                           
-                            <th>Hsn Code</th>
+                            <th>BarCode</th>
+                            <th>Brand</th>
                            
                             <th>Stock Quantity</th>
                           
@@ -114,8 +115,8 @@
                             <td><a href="/{{$url}}/{{ $item->id }}/edit" >{{ $item->name }}</a></td>
                             <td>{{ $item->Category->name ??'' }}</td>
                             <td>{{ $item->Size->name ??'' }}</td>
-                            <td>{{ $item->hsn_code }}</td>
-                          
+                            <td>{{ $item->barcode }}</td>
+                            <td>{{ $item->brandName->name ?? '' }}</td>
                             <td>{{ $item->quantity }}</td>
                            
                             

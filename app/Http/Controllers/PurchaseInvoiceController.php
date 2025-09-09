@@ -288,13 +288,10 @@ class PurchaseInvoiceController extends Controller
     public function destroy($id)
     {
         $old_items = PurchaseInvoiceItem::where('purchase_invoice_id', $id)->get(['item_id']);
-        PurchaseInvoiceItem::where('purchase_invoice_id', $id)->delete();
-        PurchaseInvoice::find($id)->delete();
-       
          $items = Product::whereIn('id', $old_items)->get();
 
          foreach ($items as $key => $item) {
-            $qty = $item->stockQuantity();
+            $qty = $item->purchaseQuantity();
 
              if($qty < 0){
                 $item->quantity =0;
@@ -305,6 +302,10 @@ class PurchaseInvoiceController extends Controller
             
             $item->save();
          }
+        PurchaseInvoiceItem::where('purchase_invoice_id', $id)->delete();
+        PurchaseInvoice::find($id)->delete();
+       
+        
             // $qty = $item_quantity->quantity + $request->quantity[$key];
             
 
