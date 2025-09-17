@@ -90,12 +90,12 @@
     <div class="inner">
       <div class="brand">Jhan's Collections</div>
       <div class="barcode">
-        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.5, 20) !!} 
+        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 25) !!} 
       </div>
       <div class="barcode-text">{{ $product->barcode }}</div>
       <div class="details">
         Product: {{ $product->name }}<br>
-        MRP: Rs. <s style="font-size: 15px;"> {{ $product->mrp }}</s><br>
+        MRP: Rs. <s style="font-size: 12px;"> {{ $product->mrp }}</s><br>
         Our Price:Rs.<b style="font-size: 15px;">{{ $product->sale_price }}</b>
       </div>
     </div>
@@ -106,12 +106,12 @@
     <div class="inner">
       <div class="brand">Jhan's Collections</div>
       <div class="barcode">
-        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1.5, 20) !!}
+        {!! DNS1D::getBarcodeHTML($product->barcode, 'C128', 1, 25) !!}
       </div>
       <div class="barcode-text">{{ $product->barcode }}</div>
       <div class="details">
         Product: {{ $product->name }}<br>
-        MRP: Rs. <s style="font-size: 15px;"> {{ $product->mrp }}</s><br>
+        MRP: Rs. <s style="font-size: 12px;"> {{ $product->mrp }}</s><br>
         Our Price:Rs.<b style="font-size: 15px;">{{ $product->sale_price }}</b>
       </div>
     </div>

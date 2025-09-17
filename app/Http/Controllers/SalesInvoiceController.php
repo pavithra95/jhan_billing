@@ -189,12 +189,18 @@ class SalesInvoiceController extends Controller
         $title = "Show " . $this->add_text;
         $customers = Customer::all();
        $products = Product::all();
+       $mrp =0;
         // $items_out = Product::all();
         $paymentMethods = PaymentMethod::all();
         $customerTypes = CustomerType::all();
         $invoice = SalesInvoice::find($id);
+        $sales = SalesInvoiceItem::where('sales_invoice_id',$id)->get();
+        foreach ($sales as $key => $item) {
+            $tot = Product::find($item->item_id);
+            $mrp += $tot->mrp;
+        }
 
-        return view('sales-invoices.print')->with(compact(['customers', 'url','title','products','invoice','paymentMethods','customerTypes']));
+        return view('sales-invoices.print')->with(compact(['mrp','customers', 'url','title','products','invoice','paymentMethods','customerTypes']));
    
         // return view('sales-invoices.show')->with (compact(['sales','url','title']));
     }

@@ -3,168 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>bill</title>
     <style>
-        @media print{
-            @page{
+        @media print {
+            @page {
+                margin: 0mm;
                 width: 80mm;
-                margin: 0;
             }
-                body{
-            /* display: flex;
-            justify-content: center; */
-            /* align-items: center; */
+            body{
+            display: flex;
+            justify-content: center;
+            background-color: #333;
         }
         .container{
-        /* width: 80mm; */
-        /* margin: 1px; */
-        
-        /* background-color: #333; */
-        /* color: white; */
-        /* border: 1px solid red; */
-            }
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 80mm;
+            background-color: white;
+            padding: 2px;
+        }
         .logo{
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 1.5em ;
+        }
+        .line{
+            margin-top: 0;
+            width: 100%;
+            border-bottom: 1px groove black;
+        }
+        table,th,td{
+            border: 1px solid black;
+            border-collapse: collapse;
             text-align: center;
-            margin-top: 10px;
+        }
+        .details{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 5px;
         }
        
-        .head1{
+        table{
+            font-size: 16px;
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+        }
+        .add{
+            text-align: center;
+            font-size: 14px;
+            margin-top: 0;
+        }
+        .total p{
+            text-align: right;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .total {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            margin-top: 10px;
-            border-bottom: 1px solid red;
-            padding-bottom: 10px;
-        }
-        .head2{
-            font-size: 10px;
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid red;
-        }
-        .head3{
-            font-size: 10px;
-            margin-top: 10px;
-            border-bottom: 1px solid red;
-            display: flex;
-            justify-content: space-around;
-        }
-        table{
-            /* border: 1px solid red; */
+            justify-content: flex-end;
             width: 100%;
-            border-collapse: collapse;
+            padding: 0 5px;
+        
+        }
+        span{
+            font-weight: 700;
             
         }
-        thead,th {
-            border: 1px solid red;
-            border-collapse: collapse;
+        .total span{
+            font-size: 18px;
+            margin-bottom: 0;
         }
-        tbody{
+        .thank h4{
+            text-align: center;
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .foot h4{
+            text-align: center;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 2px;
+        }
+        .line1 {
+            margin-top: 0;
+            width: 100%;
+            height: 0.5px;
+            border-bottom: 1px dashed black;
+        }
+        }
+         table,th,td{
+            border: 1px solid black;
+            border-collapse: collapse;
             text-align: center;
         }
-        tbody  td{
-            border: 1px solid red;
-            border-collapse: collapse;
-        }
-        .head4{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end;
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .foot1{
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-        }
-        .foot2{
-            display: flex;
-            /* flex-direction: column; */
-            /* align-items: center; */
-            justify-content: center;
-            /* text-decoration: dashed underline; */
-        }
-        .foot2 {
-            /* text-decoration: underline dashed black 0.8px; */
-            border-bottom: 1px dashed red ;
-            width: 100vw;
-        }
-        h1{
-            color: crimson;
-        }
-            }
+         
+          
         
     </style>
 </head>
 <body onload="window.print()">
     <div class="container">
-        <div class="logo">
-            <!-- <img src="./JHAN’s.png" alt="logo" width="150px" style="backdrop-filter: inherit;"> -->
-            <!-- <h1 style="">JHAN's <br> <span style="font-weight: 200; font-size: 15px; color: black;">Collections</span></h1> -->
-             <span style="font-size: 30px; font-weight: 700;">JHAN's Collections</span> 
-        </div>
-        <div class="head1">
-        <div class="address">15 Thudiyalur Rd,<br> Vasantham Nagar,<br> Saravanampatti,<br>
-            Coimbatore-641035</div>
-        <div class="phone">Phone Number: 9874563210</div>
-        <div class="gst" style="font-weight: 500;">GSTIN NO: 33IESPS8823D1ZX</div>
-        </div>
-        <div class="head2">
+        <h3 class="logo">Jhan's Collections</h3>
+        <div class="add" ><h3>
+            Thudiyalur Rd,<br>
+            Saravanampatti. <br>
+            Phone Number: <span style="font-weight: 700;">7339402937</span> <br>
+            GSTIN NO: <span style="font-weight: 700;">33BYFPJ2178C1ZR</span>
+        </h3></div>
+        <div class="line"></div>
+        <div class="details">
             <div class="bill">
-                <p>Bill No: {{$invoice->invoice_no}}</p>
-                <p>Customer: {{$invoice->customer_name}}</p>
-                <p>Mobile No: {{$invoice->customer_phone}}</p>
+                <p>Bill No: <span>{{$invoice->invoice_no}}</span><br>
+                Date: <span>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d-m-Y') }}</span>
+                </p>
             </div>
-            <div class="date">
-              <p>Date: {{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d-m-Y') }}</p>
-
-                <!-- <p>Time: {{$invoice->created_at->format('h:i A')}}</p> -->
-            </div>
+            <div class="customer"><p>Customer: <span>{{$invoice->customer_name}}</span><br>
+            Mobile No: <span>{{$invoice->customer_phone}}</span>
+            </p></div>
         </div>
-        <div class="bill-table head3">
+        <div class="line"></div>
             <table>
                 <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Rate</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+               @foreach ($invoice->SaleItem as $key => $item)
+                    
                     <tr>
-                        <th>Code</th>
-                        <th>Item</th>
-                        <th>Rate</th>
-                        <th>Qty</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($invoice->SaleItem as $key => $item)
-                    <tr>
-                    <tr>
-                        <td>{{ $item->barcode }}</td>
                         <td>{{  $item->product->name }}</td>
                         <td>{{ $item->rate }}</td>
                         <td>{{  $item->quantity }}</td>
                         <td>{{ $item->amount }}</td>
                     </tr>
-                    @endforeach
-                   
-                </tbody>
+                @endforeach
+            </tbody>
             </table>
+        <div class="total">
+            <p>Total MRP: <span><s>Rs.{{$mrp}}</s></span><br>
+            You Save: <span>Rs.{{$mrp - $invoice->total_amount}}</span><br>
+            Sub Total: <span>Rs.{{$invoice->total_amount}}</span> <br>
+            Mode Of Payment: <span>{{$invoice->Payment->name ?? ''}}</span>
+            </p>
         </div>
-        <div class="head4">
-            <p> Sub Total: Rs. {{$invoice->sub_total}}</p>
-            <p> Gst : Rs. {{$invoice->gst_amount}}</p>
-            <p> Total: Rs. {{$invoice->total_amount}}</p>
+        <div class="thank">
+            <h4>Thank You...Visit Again...</h4>
         </div>
-        <div class="foot1">
-            <h3>Receiver Signature</h3>
-            <h3>Authorized Signatory</h3>
+        <div class="foot">
+            <h4>No Return..... No Exchange.....</h4>
         </div>
-        <div class="foot2">
-            <h3>Thank You... Visit Again...</h3>
-            <p></p>
-        </div>
+        <div class="line1"></div>
     </div>
 </body>
 </html>

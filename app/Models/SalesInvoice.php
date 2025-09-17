@@ -18,6 +18,9 @@ class SalesInvoice extends Model
     {
         return $this->hasMany(SalesInvoiceItem::class, 'sales_invoice_id','id');
     }
+
+    
+  
     
     
 }
