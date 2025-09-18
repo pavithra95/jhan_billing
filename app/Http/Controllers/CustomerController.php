@@ -55,7 +55,7 @@ class CustomerController extends Controller
         }
 
 
-        $customers = $customers->paginate(10);
+        $customers = $customers->get();
         $states = GstStateMaster::all();
         $url = $this->redirectUrl;
         $title="All Customers";

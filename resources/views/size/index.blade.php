@@ -50,7 +50,7 @@
                     </tbody>
                 </table>
 
-                 {{$sizes->links()}}
+            
 
 
 

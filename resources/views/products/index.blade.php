@@ -142,11 +142,11 @@
                         @endforeach
                     </tbody>
                 </table>
-                <button id="print-selected" class="btn btn-success">
+                <!-- <button id="print-selected" class="btn btn-success"> -->
     <!-- <i class="fas fa-barcode"></i> Print Selected Labels -->
 </button>
 
-                 {{$items->links()}}
+               
 
 
 

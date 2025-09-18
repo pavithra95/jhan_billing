@@ -55,7 +55,7 @@ class VendorsController extends Controller
         }
 
 
-        $vendor = $vendor->paginate(10);
+        $vendor = $vendor->get();
         $states = GstStateMaster::all();
        
         $url = $this->redirectUrl;

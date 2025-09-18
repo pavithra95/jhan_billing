@@ -49,7 +49,7 @@ class ExpenseController extends Controller
         }
        
         $category = ExpenseCategory::all();
-        $expenses = $expenses->paginate(10);
+        $expenses = $expenses->get();
         return view('expenses.index')->with(compact('expenses','category','from','to','category_id'));
     }
 

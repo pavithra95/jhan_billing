@@ -56,7 +56,7 @@ class ProductController extends Controller
         }
 
 
-        $items = $items->paginate(10);
+        $items = $items->get();
         $units = Unit::all();
         $category = ProductCategory::all();
 

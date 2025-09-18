@@ -60,7 +60,7 @@
                     </tbody>
                 </table>
 
-                 {{$tax->links()}}
+            
 
 
 

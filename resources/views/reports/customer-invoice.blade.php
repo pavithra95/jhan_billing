@@ -32,7 +32,7 @@
                 <label>Total Bill Amount</label>
                 <div>
 
-                 <span class="hidden-xs">{{ $total_bill_amount }}</span>
+                 <span class="hidden-xs">0</span>
 
              </div>
          </div>
@@ -42,7 +42,7 @@
                 <label>Total Paid Amount</label>
                 <div>
 
-                 <span class="hidden-xs">{{ $total_paid_amount }}</span>
+                 <span class="hidden-xs">0</span>
 
              </div>
          </div>
@@ -52,7 +52,7 @@
                 <label>Total Due Amount</label>
                 <div>
 
-                 <span class="hidden-xs">{{ $total_due_amount }}</span>
+                 <span class="hidden-xs">0</span>
 
              </div>
          </div>
@@ -120,8 +120,7 @@
                             <th>Inv No</th>
                             <th>Date</th>
                             <th>Bill Amount</th>
-                            <th>Paid Amount</th>
-                            <th>Due Amount</th>
+                          
                             <th>Pay Status</th>
                            
                             
@@ -136,23 +135,11 @@
 
                             <td>{{ $item->invoice_date }}</td>
                             <td>{{ number_format($item->total_amount, 2) }}</td>
-                            @if (!empty($item->paid_amount))
-                            <td>{{ $item->paid_amount }}</td>
-                            @else
-                            <td>0</td>
-                                
-                          
-                            @endif
-                            <td>{{ number_format(($item->total_amount - $item->paid_amount), 2) }}</td>
-                             <td>{{$item->pay_status}}</td>
-                           
-                          {{--  <td><a href="/{{$url}}/{{ $item->id }}" class="btn btn-warning">Show</a></td>  --}}
-                            {{-- <td><a href="/{{$url}}/{{ $item->id }}/delete" class="btn btn-danger">Delete</a></td> --}}
-                        </tr>
+                             </tr>
                         @endforeach 
                     </tbody>
                 </table>
-                {{$sales->links()}}
+             
 
 
 

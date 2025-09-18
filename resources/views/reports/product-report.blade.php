@@ -130,8 +130,7 @@
                     </tbody>
                 </table>
 
-                 {{$products->links()}}
-
+    
 
 
 

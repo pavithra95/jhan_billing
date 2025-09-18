@@ -52,8 +52,7 @@
                     </tbody>
                 </table>
 
-                {{-- Pagination --}}
-                {{ $subCategories->links() }}
+              
 
             </div>
         </div>

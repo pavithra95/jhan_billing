@@ -14,7 +14,7 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
-        $units = PaymentMethod::paginate(20);
+        $units = PaymentMethod::all();
         return view('payment-methods.index')->with(compact(('units')));
     }
 

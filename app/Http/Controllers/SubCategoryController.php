@@ -9,7 +9,7 @@ class SubCategoryController extends Controller
 {
     public function index()
     {
-        $subCategories = SubCategory::with('category')->paginate(20);
+        $subCategories = SubCategory::with('category')->get();
         return view('subcategories.index', compact('subCategories'));
     }
 

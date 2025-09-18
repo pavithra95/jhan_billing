@@ -135,7 +135,7 @@
                   @endforeach 
                </tbody>
             </table>
-            {{$sales->links()}}
+           
          </div>
       </div>
    </div>

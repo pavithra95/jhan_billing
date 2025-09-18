@@ -116,7 +116,7 @@
                     </tbody>
                 </table>
 
-                 {{$suppliers->links()}}
+              
 
 
 

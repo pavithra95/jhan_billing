@@ -12,7 +12,7 @@ class SizeController extends Controller
      */
    public function index()
     {
-        $sizes = Size::paginate(20);
+        $sizes = Size::all();
         return view('size.index')->with(compact('sizes'));
     }
 

@@ -34,7 +34,7 @@ class ReportController extends Controller
             $products->where('name',$pro);
         }
 
-    	$products = $products->paginate(20);
+    	$products = $products->get();
        
         return view('reports.stock-report')->with(compact('products','pro'));
     }
@@ -724,11 +724,8 @@ class ReportController extends Controller
         $from = $from;
         $to = $to;
 
-        $total_bill_amount = SalesInvoice::where('customer_id',$customer->id)->sum('total_amount'); 
-        $total_paid_amount = SalesInvoice::where('customer_id',$customer->id)->sum('paid_amount'); 
-        $total_due_amount = $total_bill_amount - $total_paid_amount;
-
-        return view('reports.customer-invoice')->with(compact('sales','customer','total_bill_amount','total_paid_amount','total_due_amount','from','to'));
+       
+        return view('reports.customer-invoice')->with(compact('sales','customer','from','to'));
     }
      public function supplierReport()
     {

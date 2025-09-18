@@ -60,7 +60,7 @@ class SalesReturnInvoiceController extends Controller
          if (!empty($inv_no)) {
             $sales->where('invoice_no',$inv_no);
         }
-        $sales = $sales->paginate(20);
+        $sales = $sales->get();
         $customers = Customer::all();
 
           $total_bill_amount = SalesReturnInvoice::whereBetween('invoice_date',[$from,$to])->sum('total_amount');

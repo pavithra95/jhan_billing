@@ -144,7 +144,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{$expenses->links()}}
+              
 
 
 

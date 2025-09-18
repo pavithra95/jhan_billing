@@ -15,7 +15,7 @@ class TaxController extends Controller
      */
     public function index()
     {
-        $tax = Tax::paginate(20);
+        $tax = Tax::all();
         return view('tax.index')->with(compact(('tax')));
     }
 

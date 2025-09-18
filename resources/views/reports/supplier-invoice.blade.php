@@ -163,8 +163,7 @@
                         @endforeach 
                     </tbody>
                 </table>
-                {{$purchases->links()}}
-
+            
 
 
             </div>

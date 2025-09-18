@@ -142,8 +142,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                 {{$vendor->links()}}
-
+             
 
 
 

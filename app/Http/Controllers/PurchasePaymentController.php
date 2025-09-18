@@ -22,7 +22,7 @@ class PurchasePaymentController extends Controller
     public function index()
     {
         
-       $payment = Payment::where('invoice_type','purchase-payment')->paginate(10);
+       $payment = Payment::where('invoice_type','purchase-payment')->get();
        //dd($payment);
         return view('purchase-invoices.payment')->with(compact(['payment']));
     }

@@ -89,9 +89,7 @@
                           
                             <th>Phone</th>
                             <th>GstIn</th>
-                            <th>State</th>
-                            <th>City</th>
-                          
+                            
                            
 
                             
@@ -105,8 +103,6 @@
                             <td><a href="/reports-customer-invoice/{{ $item->id }}">{{ $item->name }}</a></td>
                             <td>{{ $item->phone }}</td>
                             <td>{{ $item->gst_no }}</td>
-                            <td>{{ $item->State->name }}</td>
-                            <td>{{ $item->city }}</td>
                            
                             
                            
@@ -116,8 +112,7 @@
                     </tbody>
                 </table>
 
-                 {{$customers->links()}}
-
+          
 
 
 

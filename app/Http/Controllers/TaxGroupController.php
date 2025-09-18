@@ -16,7 +16,7 @@ class TaxGroupController extends Controller
      */
     public function index()
     {
-        $tax = TaxGroup::paginate(10);
+        $tax = TaxGroup::all();
 
         return view('tax-group.index')->with(compact('tax'));
     }

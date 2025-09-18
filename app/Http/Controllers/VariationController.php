@@ -11,7 +11,7 @@ class VariationController extends Controller
 
     public function index()
     {
-        $variations = Variation::with('values')->paginate(10);
+        $variations = Variation::with('values')->get();
         return view('variations.index', compact('variations'));
     }
     public function create()

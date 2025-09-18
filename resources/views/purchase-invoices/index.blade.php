@@ -128,8 +128,7 @@
                         @endforeach 
                     </tbody>
                 </table>
-                 {{$purchase->links()}}
-
+               
 
 
 

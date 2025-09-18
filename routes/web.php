@@ -191,6 +191,7 @@ Route::resource('brands', BrandController::class)->middleware('auth');
 Route::resource('types', TypeController::class)->middleware('auth');
 Route::get('types/{id}/delete', [TypeController::class,'destroy']);
 Route::get('brands/{id}/delete', [BrandController::class,'destroy']);
+Route::get('/reports-customer-invoice/{id}', [ReportController::class,'customerReportShow']);
 
 
 Route::get('/get-customer-by-phone', function (Request $request) {

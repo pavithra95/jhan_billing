@@ -15,7 +15,7 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        $expenses = ExpenseCategory::paginate(10);
+        $expenses = ExpenseCategory::all();
         return view('expense-category.index')->with(compact('expenses'));
     }
 

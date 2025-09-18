@@ -161,7 +161,7 @@
                     </tbody>
                 </table>
 
-                 {{$products->links()}}
+                
 
 
 

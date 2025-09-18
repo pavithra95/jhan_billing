@@ -20,7 +20,7 @@ class Usercontroller extends Controller
     {
         if (auth()->user()->privilege == 'admin') {
             # code...
-        $users = User::paginate(10);
+        $users = User::all();
 
         return view('users.index')->with(compact(['users']));
         }

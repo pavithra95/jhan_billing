@@ -10,7 +10,7 @@ class CustomerTypeController extends Controller
 {
     public function index()
     {
-        $types = CustomerType::paginate(10);
+        $types = CustomerType::all();
         return view('customer_types.index', compact('types'));
     }
 

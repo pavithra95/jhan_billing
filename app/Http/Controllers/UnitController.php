@@ -14,7 +14,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = Unit::paginate(20);
+        $units = Unit::all();
         return view('units.index')->with(compact(('units')));
     }
 

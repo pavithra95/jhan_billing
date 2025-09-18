@@ -52,7 +52,7 @@
                     </tbody>
                 </table>
 
-                 {{$types->links()}}
+             
 
 
 

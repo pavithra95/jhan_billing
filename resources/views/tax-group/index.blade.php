@@ -80,7 +80,7 @@
                     </tbody>
                 </table>
 
-                 {{$tax->links()}}
+            
 
 
 

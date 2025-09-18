@@ -70,7 +70,7 @@ class PurchaseInvoiceController extends Controller
          if (!empty($inv_no)) {
             $purchase->where('invoice_no',$inv_no);
         }
-        $purchase = $purchase->paginate(10);
+        $purchase = $purchase->get();
         $suppliers = Vendors::all();
           $total_bill_amount = PurchaseInvoice::whereBetween('invoice_date',[$from,$to])->sum('total_amount');
         
